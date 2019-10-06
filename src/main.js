@@ -5,8 +5,11 @@ import store from "./store";
 
 import "./lib/hotcss/hotcss.js"
 import "./lib/common.scss"
+import MintUI from 'mint-ui'
+import 'mint-ui/lib/style.css'
 
 Vue.config.productionTip = false;
+Vue.use(MintUI)
 
 new Vue({
   router,
