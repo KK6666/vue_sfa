@@ -9,40 +9,52 @@
         </div>
         <div class="login-input-group">
           <!-- class绑定-对象语法，下面的语法表示 active 这个 class 存在与否将取决于active_index===1 -->
+          <!-- errors.has('comNum')———判断错误集合中，name为comNum的input是否有错误，有则返回true -->
           <div
             class="login-input-field"
-            :class="{active: active_index===1}"
+            :class="{active: active_index===1, error: errors.has('comNum')}"
           >
-            <label for="comCode">公司编码:</label>
+            <label for="comNum">公司编码:</label>
             <input
               type="number"
-              id="comCode"
+              placeholder="请输入4位数字"
+              id="comNum"
               v-model="company_num"
               @focus="active_index=1"
+              v-validate="'required|length:4'"
+              name="comNum"
             />
+            <!-- 显示验证未通过信息 -->
+            <!-- <span>{{ errors.first('comNum') }}</span> -->
           </div>
           <div
             class="login-input-field"
-            :class="{active: active_index===2}"
+            :class="{active: active_index===2, error: errors.has('empNum')}"
           >
             <label for="empNum">员工编号:</label>
             <input
               type="number"
+              placeholder="请输入4位数字"
               id="empNum"
               v-model="person_num"
               @focus="active_index=2"
+              v-validate="{required:true, length:4}"
+              name="empNum"
             />
           </div>
           <div
             class="login-input-field"
-            :class="{active: active_index===3}"
+            :class="{active: active_index===3, error: errors.has('pwd')}"
           >
             <label for="pwd">登录密码:</label>
             <input
               type="password"
+              placeholder="请输入6位及以上密码"
               id="pwd"
               v-model="password"
               @focus="active_index=3"
+              v-validate="'required|min:6'"
+              name="pwd"
             />
           </div>
         </div>
@@ -70,7 +82,7 @@
         </div>
       </div>
     </div>
-    <div class="login-btn">
+    <div class="login-btn" @click="handleLogBtnClick">
       <p>登录</p>
     </div>
   </div>
@@ -78,6 +90,7 @@
 
 <script>
 import "../assets/font/iconfont.css";
+import { Indicator } from 'mint-ui';
 export default {
   name: "Login",
   components: {},
@@ -102,10 +115,35 @@ export default {
     changeAutologStatus () {
       this.autolog = !this.autolog
       this.autolog && (this.remember=true)
+    },
+    async handleLogBtnClick () {
+      // 强制执行一次校验，这里貌似是异步的，如果不写await会直接先执行后面的代码
+      await this.$validator.validate()
+      // this.errors.any()--errors有数据，即有错误返回true
+      // if (!this.company_num || !this.person_num || !this.password || this.errors.any()) {
+      if (this.errors.any()) {
+        console.log('失败')
+      } else {
+        Indicator.open('登陆中...')
+        setTimeout(()=>{
+          Indicator.close()
+        },2000)
+      }
     }
   }
 };
 </script>
+
+<style lang="scss">
+//修改mintui样式，因为和本组件不是同一个组件
+.mint-spinner-snake {
+  width: px2rem(64) !important;
+  height: px2rem(64) !important;
+}
+.mint-indicator-text{
+  font-size: px2rem(30) !important;
+}
+</style>
 
 <style lang="scss" scoped>
 .login {
@@ -169,6 +207,9 @@ export default {
           outline: 0 none;
           font-size: px2rem(28);
         }
+        label {
+          font-weight: bold;
+        }
       }
     }
     .login-input-field.active {
@@ -219,3 +260,4 @@ export default {
   letter-spacing: px2rem(5);
 }
 </style>
+
