@@ -34,11 +34,11 @@
             <label for="empNum">员工编号:</label>
             <input
               type="number"
-              placeholder="请输入4位数字"
+              placeholder="请输入5位数字"
               id="empNum"
               v-model="person_num"
               @focus="active_index=2"
-              v-validate="{required:true, length:4}"
+              v-validate="{required:true, length:5}"
               name="empNum"
             />
           </div>
@@ -89,8 +89,9 @@
 </template>
 
 <script>
-import "../assets/font/iconfont.css";
-import { Indicator } from 'mint-ui';
+import "../assets/font/iconfont.css"
+import { Indicator, Toast  } from 'mint-ui'
+import axios from 'axios'
 export default {
   name: "Login",
   components: {},
@@ -98,11 +99,21 @@ export default {
     return {
       // 通过active_index改变，给input绑定active的class
       active_index: 0,
-      company_num: "",
-      person_num: "",
-      password: "",
+      company_num: '',
+      person_num: '',
+      password: '',
       remember: false,
       autolog: false
+    }
+  },
+  mounted () {
+    // localstorage里的数据赋值给data的属性
+    let data = JSON.parse(localStorage.getItem('Login_data'))
+    for ( let i in data) {
+      this[i] = data[i]
+    }
+    if (this.autolog===true) {
+      this.handleLogBtnClick()
     }
   },
   methods: {
@@ -120,21 +131,55 @@ export default {
       // 强制执行一次校验，这里貌似是异步的，如果不写await会直接先执行后面的代码
       await this.$validator.validate()
       // this.errors.any()--errors有数据，即有错误返回true
-      // if (!this.company_num || !this.person_num || !this.password || this.errors.any()) {
       if (this.errors.any()) {
-        console.log('失败')
+        Toast({
+          message: '请正确填写信息',
+          duration: 1000
+        })
       } else {
         Indicator.open('登陆中...')
-        setTimeout(()=>{
+        axios.post('/api/login',{
+          CNO: this.company_num,
+          PNO: this.person_num,
+          Passwd: this.password
+        })
+        .then ((res)=>{
           Indicator.close()
-        },2000)
+          if (res.data.code === 1) {
+            // 登录成功
+            // localStorage会自动将数据转换成为字符串形式，所以我们存储json类型时，可以先用JSON.stringify(data)转成字符串存储，取出时再用JSON.parse()转化为json
+            localStorage.setItem('Login_data',JSON.stringify({
+              remember: this.remember,
+              autolog: this.autolog,
+              company_num: this.remember ? this.company_num : '',
+              person_num: this.remember ? this.person_num: '',
+              password: this.remember ? this.password: ''
+            }))
+            // 跳转至home
+            this.$router.push('/home')
+          } else {
+            // 登录失败
+            Toast({
+              message: '账号密码错误',
+              duration: 1000
+            })
+          }
+        })
+        .catch ((e)=>{
+          console.log(e)
+          Indicator.close()
+          Toast({
+            message: '登录异常，请重试',
+            duration: 1000
+          })
+        })
       }
     }
   }
 };
 </script>
 
-<style lang="scss">
+<style lang='scss'>
 //修改mintui样式，因为和本组件不是同一个组件
 .mint-spinner-snake {
   width: px2rem(64) !important;
@@ -143,9 +188,13 @@ export default {
 .mint-indicator-text{
   font-size: px2rem(30) !important;
 }
+.mint-toast-text {
+  height: px2rem(40);
+  font-size: px2rem(40);
+}
 </style>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .login {
   overflow: hidden;
   position: absolute;

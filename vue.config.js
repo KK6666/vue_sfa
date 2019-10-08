@@ -9,5 +9,17 @@ module.exports = {
         prependData: `@import "./src/assets/style/main.scss";`
       }
     }
+  },
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://yapi.demo.qunar.com',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/mock/2226/api', // rewrite path
+        }
+      }
+    }
   }
 }
