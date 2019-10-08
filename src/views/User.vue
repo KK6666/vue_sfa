@@ -8,7 +8,7 @@
 <script>
 import TopHead from '../components/TopHead'
 export default {
-  name: 'Home',
+  name: 'User',
   components: {
     TopHead
   },
