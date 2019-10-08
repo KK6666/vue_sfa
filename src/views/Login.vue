@@ -92,6 +92,7 @@
 import "../assets/font/iconfont.css"
 import { Indicator, Toast  } from 'mint-ui'
 import axios from 'axios'
+import { mapMutations } from 'vuex'
 export default {
   name: "Login",
   components: {},
@@ -117,6 +118,10 @@ export default {
     }
   },
   methods: {
+    ...mapMutations([
+      // 将 `this.saveUserData()` 映射为 `this.$store.commit('saveUserData')`
+      'saveUserData'
+    ]),
     // 选择框逻辑：自动登录需同时记住密码，当取消记住密码，自动登录也要取消
     changeRememberStatus () {
       this.remember = !this.remember
@@ -147,7 +152,7 @@ export default {
           Indicator.close()
           if (res.data.code === 1) {
             // 登录成功
-            // localStorage会自动将数据转换成为字符串形式，所以我们存储json类型时，可以先用JSON.stringify(data)转成字符串存储，取出时再用JSON.parse()转化为json
+            // 用户信息存入sessionStorage----localStorage会自动将数据转换成为字符串形式，所以我们存储json类型时，可以先用JSON.stringify(data)转成字符串存储，取出时再用JSON.parse()转化为json
             localStorage.setItem('Login_data',JSON.stringify({
               remember: this.remember,
               autolog: this.autolog,
@@ -155,6 +160,13 @@ export default {
               person_num: this.remember ? this.person_num: '',
               password: this.remember ? this.password: ''
             }))
+
+            // 用户信息存入sessionStorage，解决vuex在页面刷新后就丢失数据问题
+            sessionStorage.setItem('Login_data',JSON.stringify(res.data.user))
+
+            // 用户信息存入vuex
+            this.saveUserData(res.data.user)
+
             // 跳转至home
             this.$router.push('/home')
           } else {
