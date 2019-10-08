@@ -1,8 +1,7 @@
 <template>
   <div>
-    <TopHead title='SFA'>
-      <router-link class="icon iconfont icon-user" to="/user" slot="r"></router-link>
-    </TopHead>
+    <top-head title='用户'>
+    </top-head>
   </div>
 </template>
 
