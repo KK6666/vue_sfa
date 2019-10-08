@@ -152,21 +152,14 @@ export default {
           Indicator.close()
           if (res.data.code === 1) {
             // 登录成功
-            // 用户信息存入sessionStorage----localStorage会自动将数据转换成为字符串形式，所以我们存储json类型时，可以先用JSON.stringify(data)转成字符串存储，取出时再用JSON.parse()转化为json
-            localStorage.setItem('Login_data',JSON.stringify({
-              remember: this.remember,
-              autolog: this.autolog,
-              company_num: this.remember ? this.company_num : '',
-              person_num: this.remember ? this.person_num: '',
-              password: this.remember ? this.password: ''
-            }))
-
+            // 用户信息存入sessionStorage,可实现长期保存账号密码,实现记住密码自动登录.非常不安全,一般不使用
+            if (this.remember) {
+              this.setDataToLocalStorage()
+            }
             // 用户信息存入sessionStorage，解决vuex在页面刷新后就丢失数据问题
-            sessionStorage.setItem('Login_data',JSON.stringify(res.data.user))
-
+            this.setDataToSessionStorage(res.data.user) 
             // 用户信息存入vuex
-            this.saveUserData(res.data.user)
-
+            this.setDataToVuex(res.data.user)
             // 跳转至home
             this.$router.push('/home')
           } else {
@@ -186,6 +179,22 @@ export default {
           })
         })
       }
+    },
+    // localStorage会自动将数据转换成为字符串形式，所以我们存储json类型时，可以先用JSON.stringify(data)转成字符串存储，取出时再用JSON.parse()转化为json
+    setDataToLocalStorage () {
+      localStorage.setItem('Login_data',JSON.stringify({
+        remember: this.remember,
+        autolog: this.autolog,
+        company_num: this.remember ? this.company_num : '',
+        person_num: this.remember ? this.person_num: '',
+        password: this.remember ? this.password: ''
+      }))
+    },
+    setDataToSessionStorage (data) {
+      sessionStorage.setItem('Login_data',JSON.stringify(data))
+    },
+    setDataToVuex (data) {
+       this.saveUserData(data)
     }
   }
 };
