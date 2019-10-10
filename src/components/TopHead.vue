@@ -13,9 +13,9 @@
 <script>
 import '../assets/tophead-font/iconfont.css'
 export default {
-  name: 'topHead',
+  name: 'TopHead',
   props: {
-    title: String
+    title: { type: String, default: '' }
   },
   data() {
     return {}

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <top-head title="用户"> </top-head>
+    <TopHead title="用户"></TopHead>
   </div>
 </template>
 

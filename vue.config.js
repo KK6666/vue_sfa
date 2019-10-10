@@ -20,8 +20,9 @@ module.exports = {
           '^/api': '/mock/2226/api' // rewrite path
         }
       }
-    }
-    // hot: true,
-    // clientLogLevel: 'warning'
+    },
+    // 可以让eslint警告显示在console
+    hot: true,
+    clientLogLevel: 'warning'
   }
 }
