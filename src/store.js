@@ -1,23 +1,25 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
-let userData = sessionStorage.getItem('Login_data') ? JSON.parse(sessionStorage.getItem('Login_data')):null
+let userData = sessionStorage.getItem('Login_data')
+  ? JSON.parse(sessionStorage.getItem('Login_data'))
+  : null
 
 export default new Vuex.Store({
   state: {
     LoginUser: userData
   },
   mutations: {
-    saveUserData (state, userData) {
+    saveUserData(state, userData) {
       state.LoginUser = userData
     }
   },
   actions: {},
   getters: {
-    getLoginUser: (state)=>{
+    getLoginUser: state => {
       return state.LoginUser
     }
   }
-});
+})

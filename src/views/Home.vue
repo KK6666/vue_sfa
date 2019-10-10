@@ -1,7 +1,11 @@
 <template>
   <div>
-    <TopHead title='SFA'>
-      <router-link class="icon iconfont icon-user" to="/user" slot="r"></router-link>
+    <TopHead title="SFA">
+      <router-link
+        class="icon iconfont icon-user"
+        to="/user"
+        slot="r"
+      ></router-link>
     </TopHead>
   </div>
 </template>
@@ -17,6 +21,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

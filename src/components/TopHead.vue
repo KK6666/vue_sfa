@@ -11,16 +11,16 @@
 </template>
 
 <script>
-import "../assets/tophead-font/iconfont.css";
+import '../assets/tophead-font/iconfont.css'
 export default {
-  name: "topHead",
+  name: 'topHead',
   props: {
     title: String
   },
   data() {
-    return {};
+    return {}
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -35,11 +35,11 @@ export default {
   justify-content: space-between;
   .tp-l {
     padding-left: px2rem(28);
-    min-width: px2rem(36)
+    min-width: px2rem(36);
   }
   .tp-r {
     padding-right: px2rem(28);
-    min-width: px2rem(36)
+    min-width: px2rem(36);
   }
   .icon {
     font-size: px2rem(36);

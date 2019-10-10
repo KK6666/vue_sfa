@@ -12,70 +12,71 @@
           <!-- errors.has('comNum')———判断错误集合中，name为comNum的input是否有错误，有则返回true -->
           <div
             class="login-input-field"
-            :class="{active: active_index===1, error: errors.has('comNum')}"
+            :class="{ active: active_index === 1, error: errors.has('comNum') }"
           >
             <label for="comNum">公司编码:</label>
             <input
-              type="number"
-              placeholder="请输入4位数字"
               id="comNum"
               v-model="company_num"
-              @focus="active_index=1"
               v-validate="'required|length:4'"
+              type="number"
+              placeholder="请输入4位数字"
               name="comNum"
+              @focus="active_index = 1"
             />
             <!-- 显示验证未通过信息 -->
             <!-- <span>{{ errors.first('comNum') }}</span> -->
           </div>
           <div
             class="login-input-field"
-            :class="{active: active_index===2, error: errors.has('empNum')}"
+            :class="{ active: active_index === 2, error: errors.has('empNum') }"
           >
             <label for="empNum">员工编号:</label>
             <input
-              type="number"
-              placeholder="请输入5位数字"
               id="empNum"
               v-model="person_num"
-              @focus="active_index=2"
-              v-validate="{required:true, length:5}"
+              v-validate="{ required: true, length: 5 }"
+              type="number"
+              placeholder="请输入5位数字"
               name="empNum"
+              @focus="active_index = 2"
             />
           </div>
           <div
             class="login-input-field"
-            :class="{active: active_index===3, error: errors.has('pwd')}"
+            :class="{ active: active_index === 3, error: errors.has('pwd') }"
           >
             <label for="pwd">登录密码:</label>
             <input
-              type="password"
-              placeholder="请输入6位及以上密码"
               id="pwd"
               v-model="password"
-              @focus="active_index=3"
               v-validate="'required|min:6'"
+              type="password"
+              placeholder="请输入6位及以上密码"
               name="pwd"
+              @focus="active_index = 3"
             />
           </div>
         </div>
         <div class="login-option-wrap">
-          <div
-            class="remember-pwd"
-            @click="changeRememberStatus"
-          >
+          <div class="remember-pwd" @click="changeRememberStatus">
             <i
               class="iconfont"
-              :class="{iconFuxuankuangXuanzhong: remember, iconFuxuankuangWeixuanzhong: !remember}"
+              :class="{
+                iconFuxuankuangXuanzhong: remember,
+                iconFuxuankuangWeixuanzhong: !remember
+              }"
             ></i>
             <span>保存密码</span>
           </div>
-          <div
-            class="auto-login"
-            @click="changeAutologStatus"
-          >
+          <div class="auto-login" @click="changeAutologStatus">
             <i
               class="iconfont"
-              :class="autolog? 'iconFuxuankuangXuanzhong': 'iconFuxuankuangWeixuanzhong'"
+              :class="
+                autolog
+                  ? 'iconFuxuankuangXuanzhong'
+                  : 'iconFuxuankuangWeixuanzhong'
+              "
             ></i>
             <span>自动登录</span>
           </div>
@@ -89,14 +90,14 @@
 </template>
 
 <script>
-import "../assets/font/iconfont.css"
-import { Indicator, Toast  } from 'mint-ui'
+import '../assets/font/iconfont.css'
+import { Indicator, Toast } from 'mint-ui'
 import axios from 'axios'
 import { mapMutations } from 'vuex'
 export default {
-  name: "Login",
+  name: 'Login',
   components: {},
-  data () {
+  data() {
     return {
       // 通过active_index改变，给input绑定active的class
       active_index: 0,
@@ -107,13 +108,13 @@ export default {
       autolog: false
     }
   },
-  mounted () {
+  mounted() {
     // localstorage里的数据赋值给data的属性
     let data = JSON.parse(localStorage.getItem('Login_data'))
-    for ( let i in data) {
+    for (let i in data) {
       this[i] = data[i]
     }
-    if (this.autolog===true) {
+    if (this.autolog === true) {
       this.handleLogBtnClick()
     }
   },
@@ -123,16 +124,16 @@ export default {
       'saveUserData'
     ]),
     // 选择框逻辑：自动登录需同时记住密码，当取消记住密码，自动登录也要取消
-    changeRememberStatus () {
+    changeRememberStatus() {
       this.remember = !this.remember
       // 当remember为false，让autolog也为false
-      this.remember || (this.autolog=false)
+      this.remember || (this.autolog = false)
     },
-    changeAutologStatus () {
+    changeAutologStatus() {
       this.autolog = !this.autolog
-      this.autolog && (this.remember=true)
+      this.autolog && (this.remember = true)
     },
-    async handleLogBtnClick () {
+    async handleLogBtnClick() {
       // 强制执行一次校验，这里貌似是异步的，如果不写await会直接先执行后面的代码
       await this.$validator.validate()
       // this.errors.any()--errors有数据，即有错误返回true
@@ -143,70 +144,74 @@ export default {
         })
       } else {
         Indicator.open('登陆中...')
-        axios.post('/api/login',{
-          CNO: this.company_num,
-          PNO: this.person_num,
-          Passwd: this.password
-        })
-        .then ((res)=>{
-          Indicator.close()
-          if (res.data.code === 1) {
-            // 登录成功
-            // 用户信息存入sessionStorage,可实现长期保存账号密码,实现记住密码自动登录.非常不安全,一般不使用
-            if (this.remember) {
-              this.setDataToLocalStorage()
+        axios
+          .post('/api/login', {
+            CNO: this.company_num,
+            PNO: this.person_num,
+            Passwd: this.password
+          })
+          .then(res => {
+            Indicator.close()
+            if (res.data.code === 1) {
+              // 登录成功
+              // 用户信息存入sessionStorage,可实现长期保存账号密码,实现记住密码自动登录.非常不安全,一般不使用
+              if (this.remember) {
+                this.setDataToLocalStorage()
+              }
+              // 用户信息存入sessionStorage，解决vuex在页面刷新后就丢失数据问题
+              this.setDataToSessionStorage(res.data.user)
+              // 用户信息存入vuex
+              this.setDataToVuex(res.data.user)
+              // 跳转至home
+              this.$router.push('/home')
+            } else {
+              // 登录失败
+              Toast({
+                message: '账号密码错误',
+                duration: 1000
+              })
             }
-            // 用户信息存入sessionStorage，解决vuex在页面刷新后就丢失数据问题
-            this.setDataToSessionStorage(res.data.user) 
-            // 用户信息存入vuex
-            this.setDataToVuex(res.data.user)
-            // 跳转至home
-            this.$router.push('/home')
-          } else {
-            // 登录失败
+          })
+          .catch(e => {
+            console.log(e)
+            Indicator.close()
             Toast({
-              message: '账号密码错误',
+              message: '登录异常，请重试',
               duration: 1000
             })
-          }
-        })
-        .catch ((e)=>{
-          console.log(e)
-          Indicator.close()
-          Toast({
-            message: '登录异常，请重试',
-            duration: 1000
           })
-        })
       }
     },
     // localStorage会自动将数据转换成为字符串形式，所以我们存储json类型时，可以先用JSON.stringify(data)转成字符串存储，取出时再用JSON.parse()转化为json
-    setDataToLocalStorage () {
-      localStorage.setItem('Login_data',JSON.stringify({
-        remember: this.remember,
-        autolog: this.autolog,
-        company_num: this.remember ? this.company_num : '',
-        person_num: this.remember ? this.person_num: '',
-        password: this.remember ? this.password: ''
-      }))
+    setDataToLocalStorage() {
+      localStorage.setItem(
+        'Login_data',
+        JSON.stringify({
+          remember: this.remember,
+          autolog: this.autolog,
+          company_num: this.remember ? this.company_num : '',
+          person_num: this.remember ? this.person_num : '',
+          password: this.remember ? this.password : ''
+        })
+      )
     },
-    setDataToSessionStorage (data) {
-      sessionStorage.setItem('Login_data',JSON.stringify(data))
+    setDataToSessionStorage(data) {
+      sessionStorage.setItem('Login_data', JSON.stringify(data))
     },
-    setDataToVuex (data) {
-       this.saveUserData(data)
+    setDataToVuex(data) {
+      this.saveUserData(data)
     }
   }
-};
+}
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 //修改mintui样式，因为和本组件不是同一个组件
 .mint-spinner-snake {
   width: px2rem(64) !important;
   height: px2rem(64) !important;
 }
-.mint-indicator-text{
+.mint-indicator-text {
   font-size: px2rem(30) !important;
 }
 .mint-toast-text {
@@ -215,7 +220,7 @@ export default {
 }
 </style>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .login {
   overflow: hidden;
   position: absolute;
@@ -297,7 +302,7 @@ export default {
       span {
         margin-left: px2rem(15);
         letter-spacing: px2rem(2);
-        font-size: px2rem(30)
+        font-size: px2rem(30);
       }
       i.iconfont {
         font-size: px2rem(30);
@@ -330,4 +335,3 @@ export default {
   letter-spacing: px2rem(5);
 }
 </style>
-

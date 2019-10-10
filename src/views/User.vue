@@ -1,7 +1,6 @@
 <template>
   <div>
-    <top-head title='用户'>
-    </top-head>
+    <top-head title="用户"> </top-head>
   </div>
 </template>
 
@@ -12,10 +11,9 @@ export default {
   components: {
     TopHead
   },
+  mounted() {},
   methods: {}
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
