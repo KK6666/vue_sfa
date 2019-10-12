@@ -92,8 +92,9 @@
 <script>
 import '../assets/font/iconfont.css'
 import { Indicator, Toast } from 'mint-ui'
-import axios from 'axios'
 import { mapMutations } from 'vuex'
+// axios请求方法全部封装在service
+import service from '../service'
 export default {
   name: 'Login',
   components: {},
@@ -144,8 +145,8 @@ export default {
         })
       } else {
         Indicator.open('登陆中...')
-        axios
-          .post('/api/login', {
+        service
+          .login({
             CNO: this.company_num,
             PNO: this.person_num,
             Passwd: this.password
@@ -159,9 +160,9 @@ export default {
                 this.setDataToLocalStorage()
               }
               // 用户信息存入sessionStorage，解决vuex在页面刷新后就丢失数据问题
-              this.setDataToSessionStorage(res.data.user)
+              this.setDataToSessionStorage(res)
               // 用户信息存入vuex
-              this.setDataToVuex(res.data.user)
+              this.setDataToVuex(res)
               // 跳转至home
               this.$router.push('/home')
             } else {
@@ -195,11 +196,12 @@ export default {
         })
       )
     },
-    setDataToSessionStorage(data) {
-      sessionStorage.setItem('Login_data', JSON.stringify(data))
+    setDataToSessionStorage(res) {
+      sessionStorage.setItem('Login_data', JSON.stringify(res.data.user))
+      sessionStorage.setItem('LoginToken', JSON.stringify(res.data.token))
     },
-    setDataToVuex(data) {
-      this.saveUserData(data)
+    setDataToVuex(res) {
+      this.saveUserData(res.data.user)
     }
   }
 }

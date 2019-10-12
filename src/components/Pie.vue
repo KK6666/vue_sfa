@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="pieWrapper">
       <div ref="pie" class="pie"></div>
-      <div class="val">{{ finishVal }}<span v-if="isPercentShow">%</span></div>
+      <div class="val">{{ val }}<span v-if="isPercentShow">%</span></div>
     </div>
     <div class="title">{{ title }}</div>
   </div>
@@ -20,10 +20,13 @@ export default {
   name: 'Pie',
   props: {
     title: { type: String, default: '无' },
-    finishVal: { type: Number, default: 0 },
+    val: { type: Number, default: 0 },
     isPercentShow: { type: Boolean, default: true }
   },
   mounted() {
+    this.setEchart()
+  },
+  updated() {
     this.setEchart()
   },
   methods: {
@@ -44,8 +47,8 @@ export default {
               }
             },
             data: [
-              { value: this.finishVal, name: '' },
-              { value: this.isPercentShow ? 100 - this.finishVal : 0, name: '' }
+              { value: this.val, name: '' },
+              { value: this.isPercentShow ? 100 - this.val : 0, name: '' }
             ]
           }
         ]

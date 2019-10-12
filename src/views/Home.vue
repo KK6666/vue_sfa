@@ -10,9 +10,9 @@
     <div class="mainWrapper">
       <header>{{ getYearMonth }}</header>
       <div class="pies">
-        <Pie :finish-val="finishVal" title="月进度"></Pie>
-        <Pie :finish-val="finishVal" title="月销售额完成"></Pie>
-        <Pie :finish-val="522" title="有效门店" :is-percent-show="false"></Pie>
+        <Pie :val="getDayOfMonth" title="月进度"></Pie>
+        <Pie :val="monthPercent" title="月销售额完成"></Pie>
+        <Pie :val="totalshops" title="有效门店" :is-percent-show="false"></Pie>
       </div>
     </div>
   </div>
@@ -21,6 +21,7 @@
 <script>
 import TopHead from '../components/TopHead'
 import Pie from '../components/Pie'
+import service from '../service'
 export default {
   name: 'Home',
   components: {
@@ -29,14 +30,25 @@ export default {
   },
   data: function() {
     return {
-      finishVal: 20
+      monthPercent: 0,
+      totalshops: 0
     }
   },
   computed: {
     getYearMonth() {
       let date = new Date()
       return `${date.getFullYear()}年${date.getMonth() + 1}月`
+    },
+    getDayOfMonth() {
+      let t = new Date()
+      return parseInt((t.getDate() / 30) * 100)
     }
+  },
+  mounted() {
+    service.getUserProgress().then(res => {
+      this.monthPercent = res.data.monthPercent
+      this.totalshops = res.data.totalshops
+    })
   },
   methods: {}
 }
