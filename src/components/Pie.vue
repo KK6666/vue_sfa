@@ -81,7 +81,7 @@ export default {
   .title {
     text-align: center;
     font-size: $text-size-mid;
-    margin-top: px2rem(10);
+    margin-top: px2rem(20);
   }
 }
 </style>
