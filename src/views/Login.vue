@@ -35,9 +35,9 @@
             <input
               id="empNum"
               v-model="person_num"
-              v-validate="{ required: true, length: 5 }"
+              v-validate="{ required: true, length: 4 }"
               type="number"
-              placeholder="请输入5位数字"
+              placeholder="请输入4位数字"
               name="empNum"
               @focus="active_index = 2"
             />
@@ -62,21 +62,14 @@
           <div class="remember-pwd" @click="changeRememberStatus">
             <i
               class="iconfont"
-              :class="{
-                iconFuxuankuangXuanzhong: remember,
-                iconFuxuankuangWeixuanzhong: !remember
-              }"
+              :class="remember ? 'icon-check-square' : 'icon-border'"
             ></i>
             <span>保存密码</span>
           </div>
           <div class="auto-login" @click="changeAutologStatus">
             <i
               class="iconfont"
-              :class="
-                autolog
-                  ? 'iconFuxuankuangXuanzhong'
-                  : 'iconFuxuankuangWeixuanzhong'
-              "
+              :class="autolog ? 'icon-check-square' : 'icon-border'"
             ></i>
             <span>自动登录</span>
           </div>
@@ -208,7 +201,7 @@ export default {
 </script>
 
 <style lang="scss">
-//修改mintui样式，因为和本组件不是同一个组件
+//修改mintui样式，因为和本组件不是同一个组件,直接修改无效
 .mint-spinner-snake {
   width: px2rem(64) !important;
   height: px2rem(64) !important;
@@ -224,7 +217,6 @@ export default {
 
 <style lang="scss" scoped>
 .login {
-  overflow: hidden;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -311,7 +303,7 @@ export default {
       }
       .remember-pwd {
         display: inline-block;
-        margin-left: px2rem(80);
+        margin-left: px2rem(90);
       }
       .remember-pwd.active,
       .auto-login.active {
@@ -319,7 +311,7 @@ export default {
       }
       .auto-login {
         display: inline-block;
-        margin-left: px2rem(100);
+        margin-left: px2rem(80);
       }
     }
   }

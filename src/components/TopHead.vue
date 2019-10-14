@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import '../assets/tophead-font/iconfont.css'
+import '../assets/font/iconfont.css'
 export default {
   name: 'TopHead',
   props: {
@@ -33,6 +33,11 @@ export default {
   color: #fff;
   display: flex;
   justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
   .tp-l {
     padding-left: px2rem(28);
     min-width: px2rem(36);

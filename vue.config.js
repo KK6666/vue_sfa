@@ -13,11 +13,13 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://yapi.demo.qunar.com',
+        target: 'http://localhost:8889',
+        // target: 'http://yapi.demo.qunar.com',
         ws: true,
         changeOrigin: true,
         pathRewrite: {
-          '^/api': '/mock/2226/api' // rewrite path
+          '^/api': '/api'
+          // '^/api': '/mock/2226/api' // rewrite path
         }
       }
     },

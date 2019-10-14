@@ -12,7 +12,7 @@
       <div class="pies">
         <Pie :val="getDayOfMonth" title="月进度"></Pie>
         <Pie :val="monthPercent" title="月销售额完成"></Pie>
-        <Pie :val="totalshops" title="有效门店" :is-percent-show="false"></Pie>
+        <Pie :val="totalShops" title="有效门店" :is-percent-show="false"></Pie>
       </div>
     </div>
     <ul class="topicWrapper">
@@ -87,7 +87,7 @@ export default {
   data: function() {
     return {
       monthPercent: 0,
-      totalshops: 0,
+      totalShops: 0,
       topicList: topicList
     }
   },
@@ -103,8 +103,8 @@ export default {
   },
   mounted() {
     service.getUserProgress().then(res => {
-      this.monthPercent = res.data.monthPercent
-      this.totalshops = res.data.totalshops
+      this.monthPercent = res.data.monthPercent * 100
+      this.totalShops = res.data.totalShops
     })
   },
   methods: {}
@@ -114,6 +114,9 @@ export default {
 <style lang="scss" scoped>
 .home {
   color: $text-color;
+  padding-top: px2rem(120);
+  background: white;
+  height: 100%;
 }
 .mainWrapper {
   width: 100%;
@@ -122,6 +125,7 @@ export default {
     height: px2rem(90);
     text-align: center;
     line-height: px2rem(90);
+    font-size: $text-size-imp;
   }
   .pies {
     display: flex;

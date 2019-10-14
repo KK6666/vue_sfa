@@ -26,5 +26,14 @@ export default {
   },
   getUserProgress() {
     return axios.get('/api/getUserProgress')
+  },
+  getNotice(date, limit, isloadelater) {
+    return axios.get('/api/message', {
+      params: {
+        date,
+        limit,
+        isloadelater
+      }
+    })
   }
 }
