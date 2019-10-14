@@ -4,6 +4,7 @@ import Login from './views/Login.vue'
 import Home from './views/Home.vue'
 import User from './views/User.vue'
 import Notice from './views/Notice.vue'
+import NoticeDetail from './views/NoticeDetail.vue'
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/notice',
       name: 'notice',
       component: Notice
+    },
+    {
+      path: '/notice/:id',
+      name: 'noticeDetail',
+      component: NoticeDetail
     }
   ]
 })

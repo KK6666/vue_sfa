@@ -3,3 +3,9 @@
     <router-view />
   </div>
 </template>
+
+<style lang="scss">
+#app {
+  background: white;
+}
+</style>

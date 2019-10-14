@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home view">
     <TopHead title="SFA">
       <router-link
         slot="r"
@@ -7,26 +7,32 @@
         to="/user"
       ></router-link>
     </TopHead>
-    <div class="mainWrapper">
-      <header>{{ getYearMonth }}</header>
-      <div class="pies">
-        <Pie :val="getDayOfMonth" title="月进度"></Pie>
-        <Pie :val="monthPercent" title="月销售额完成"></Pie>
-        <Pie :val="totalShops" title="有效门店" :is-percent-show="false"></Pie>
+    <div class="main">
+      <div class="mainWrapper">
+        <header>{{ getYearMonth }}</header>
+        <div class="pies">
+          <Pie :val="getDayOfMonth" title="月进度"></Pie>
+          <Pie :val="monthPercent" title="月销售额完成"></Pie>
+          <Pie
+            :val="totalShops"
+            title="有效门店"
+            :is-percent-show="false"
+          ></Pie>
+        </div>
       </div>
+      <ul class="topicWrapper">
+        <li v-for="i in 9" :key="i">
+          <template v-if="i <= topicList.length">
+            <Topic
+              :url="topicList[i - 1].url"
+              :img-url="topicList[i - 1].imgUrl"
+              :menu-name="topicList[i - 1].menuName"
+            >
+            </Topic>
+          </template>
+        </li>
+      </ul>
     </div>
-    <ul class="topicWrapper">
-      <li v-for="i in 9" :key="i">
-        <template v-if="i <= topicList.length">
-          <Topic
-            :url="topicList[i - 1].url"
-            :img-url="topicList[i - 1].imgUrl"
-            :menu-name="topicList[i - 1].menuName"
-          >
-          </Topic>
-        </template>
-      </li>
-    </ul>
   </div>
 </template>
 
@@ -112,12 +118,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.home {
-  color: $text-color;
-  padding-top: px2rem(120);
-  background: white;
+// 页面实现header固定，main单独实现滑动
+.view {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  width: 100%;
   height: 100%;
+  .header {
+    // TopHead的父组件（也就是整个页面）会全部使用flex布局，如果内容超出页面高度，子元素的flex-shrink默认为1，head设置的高度会缩小，设置为0后不会缩小
+    flex-shrink: 0;
+  }
+  .main {
+    overflow-y: scroll;
+  }
 }
+
 .mainWrapper {
   width: 100%;
   header {
