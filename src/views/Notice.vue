@@ -35,6 +35,8 @@ import '../assets/font/iconfont.css'
 import TopHead from '../components/TopHead'
 import service from '../service'
 import { Loadmore } from 'mint-ui'
+import { mapState } from 'vuex'
+import { mapMutations } from 'vuex'
 export default {
   name: 'Notice',
   components: {
@@ -43,43 +45,58 @@ export default {
   },
   data() {
     return {
-      noticeList: [],
       allLoaded: false, //数据全部加载完，设置为true，不会再加载数据
       earlistDate: null,
       latestDate: null
     }
   },
-  mounted() {
-    // 最早一条公告时间设为为当前时间，并以当前时间为第一条时间加载
-    service.getNotice(Date.now(), 10, true).then(res => {
-      this.noticeList.push(...res.data.data.messages.reverse())
-      // earlistDate等于公告列表里最早一条的时间，作为下拉加载之前数据的earlistDate
-      this.earlistDate = this.noticeList[this.noticeList.length - 1].SubDate
-      // latestDatee等于公告列表里最晚一条的时间，作为下拉加载之前数据的earlistDate
-      this.latestDate = this.noticeList[0].SubDate
+  computed: {
+    ...mapState({
+      noticeList: 'noticeList'
     })
   },
+  mounted() {
+    // 从noticeDetail返回时，会再此触发mounted，如果noticeList已经有数据了，就不要再发起axios
+    if (this.noticeList.length) {
+      return
+    }
+    // 最早一条公告时间设为为当前时间，并以当前时间为第一条时间加载
+    service.getNotice(new Date(), 15, true).then(res => {
+      this.noticeListPush(res.data.data.messages.reverse())
+      // earlistDate等于公告列表里最早一条的时间，作为下拉加载之前数据的earlistDate
+      this.earlistDate = new Date(
+        this.noticeList[this.noticeList.length - 1].SubDate
+      )
+      // latestDatee等于公告列表里最晚一条的时间，作为下拉加载之前数据的earlistDate
+      this.latestDate = new Date(this.noticeList[0].SubDate)
+    })
+  },
+  created() {
+    console.log('created')
+  },
   methods: {
+    ...mapMutations(['noticeListPush', 'noticeListUnshift']),
     // 下拉刷新（如果有新数据，需要添加到数据列表noticeList的最前面）
     loadTop() {
-      service.getNotice(this.latestDate, 10, false).then(res => {
-        console.log(res)
-        this.noticeList.unshift(...res.data.data.messages.reverse())
-        this.latestDate = this.noticeList[0].SubDate
+      service.getNotice(this.latestDate, 15, false).then(res => {
+        this.noticeListUnshift(res.data.data.messages.reverse())
+        this.latestDate = new Date(this.noticeList[0].SubDate)
         // 加载数据后需要对组件进行一些重新定位的操作。
         this.$refs.loadmore.onTopLoaded()
       })
     },
     // 上拉加载当前时间之前的数据（如果有数据，需要添加到数据列表noticeList的最后面）
     loadBottom() {
-      service.getNotice(this.earlistDate, 10, true).then(res => {
+      service.getNotice(this.earlistDate, 15, true).then(res => {
         // 没有新的数据了
         if (res.data.data.messages <= 0) {
           this.allLoaded = true
           return
         }
-        this.noticeList.push(...res.data.data.messages.reverse())
-        this.earlistDate = this.noticeList[this.noticeList.length - 1].SubDate
+        this.noticeListPush(res.data.data.messages.reverse())
+        this.earlistDate = new Date(
+          this.noticeList[this.noticeList.length - 1].SubDate
+        )
         // 加载数据后需要对组件进行一些重新定位的操作。
         this.$refs.loadmore.onBottomLoaded()
       })

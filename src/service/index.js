@@ -18,16 +18,24 @@ let axiosInt = axios.interceptors.request.use(
 )
 
 export default {
+  // 登录
   login(data) {
     return axios.post('/api/login', data)
   },
+  // 退出
   logout() {
     axios.interceptors.request.eject(axiosInt)
   },
+  // 获取用户进度信息
   getUserProgress() {
     return axios.get('/api/getUserProgress')
   },
+  // 获取公告
   getNotice(date, limit, isloadelater) {
+    if (date) {
+      // 注意这里的date，传过来的date需要时Date原始类型，不能时字符串类型
+      date = date.getTime()
+    }
     return axios.get('/api/message', {
       params: {
         date,
@@ -35,5 +43,9 @@ export default {
         isloadelater
       }
     })
+  },
+  // 设置公告已读
+  setNoticeReaded(id) {
+    return axios.post(`/api/auth/notice/:${id}`)
   }
 }

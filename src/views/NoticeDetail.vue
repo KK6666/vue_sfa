@@ -2,33 +2,43 @@
   <div class="noticeDetail view">
     <TopHead title="公告信息" class="header"></TopHead>
     <div class="main">
-      {{ $route.params.id }}
-      三字经_百度汉语 作者：王应麟 人之初，性本善。性相近，习相远。
-      苟不教，性乃迁。教之道，贵以专。 昔孟母，择邻处。子不学，断机杼。
-      窦燕山，有义方。教五子，名俱扬。 养不教，父之过。教不严，师之惰。
-      子不学，非所宜。幼不学，老何为。 玉不琢，不成器。人不学，不知义。
-      为人子，方少时。亲师友，习礼仪。
-      香九龄，能温席。孝于亲，所当执。三字经_百度汉语 作者：王应麟
-      人之初，性本善。性相近，习相远。 苟不教，性乃迁。教之道，贵以专。
-      昔孟母，择邻处。子不学，断机杼。 窦燕山，有义方。教五子，名俱扬。
-      养不教，父之过。教不严，师之惰。 子不学，非所宜。幼不学，老何为。
-      玉不琢，不成器。人不学，不知义。 为人子，方少时。亲师友，习礼仪。
-      香九龄，能温席。孝于亲，所当执。三字经_百度汉语 作者：王应麟
-      人之初，性本善。性相近，习相远。 苟不教，性乃迁。教之道，贵以专。
-      昔孟母，择邻处。子不学，断机杼。 窦燕山，有义方。教五子，名俱扬。
-      养不教，父之过。教不严，师之惰。 子不学，非所宜。幼不学，老何为。
-      玉不琢，不成器。人不学，不知义。 为人子，方少时。亲师友，习礼仪。
-      香九龄，能温席。孝于亲，所当执。
+      <!-- // axios写在mounted里，执行了mounted之后notice才有内容。如果直接用notice.title,在mounted之前挂载时，notice.title并不存在，会报错 -->
+      <h3>{{ notice ? notice.title : '' }}</h3>
+      <p>{{ notice ? notice.text : '' }}</p>
     </div>
   </div>
 </template>
 
 <script>
 import TopHead from '../components/TopHead'
+import { mapState } from 'vuex'
+import { mapMutations } from 'vuex'
+import service from '../service'
 export default {
   name: 'NoticeDetail',
   components: {
     TopHead
+  },
+  data() {
+    return {
+      notice: null
+    }
+  },
+  computed: {
+    ...mapState(['noticeList'])
+  },
+  mounted() {
+    const noticeId = this.$route.params.id
+    this.notice = this.noticeList.find(item => noticeId == item.id)
+    console.log(this.notice)
+
+    // 服务器设置已读
+    service.setNoticeReaded(noticeId)
+    // 改变vuex里noticeList数据，设置成已读
+    this.setNoticeReaded(noticeId)
+  },
+  methods: {
+    ...mapMutations(['setNoticeReaded'])
   }
 }
 </script>
@@ -47,6 +57,19 @@ export default {
   }
   .main {
     overflow-y: scroll;
+  }
+}
+
+.main {
+  padding: px2rem(20);
+  h3 {
+    line-height: px2rem(35);
+    font-weight: bold;
+  }
+  p {
+    margin-top: px2rem(15);
+    line-height: px2rem(30);
+    text-indent: px2rem(60);
   }
 }
 </style>
