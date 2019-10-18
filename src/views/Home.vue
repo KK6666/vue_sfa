@@ -109,7 +109,7 @@ export default {
   },
   mounted() {
     service.getUserProgress().then(res => {
-      this.monthPercent = res.data.monthPercent * 100
+      this.monthPercent = res.data.monthPercent
       this.totalShops = res.data.totalShops
     })
   },

@@ -27,6 +27,7 @@ export default {
 .topHead {
   width: 100%;
   height: px2rem(120);
+  //line-height可以起到保持高度作用，同flex-shrink：0
   line-height: px2rem(120);
   font-size: px2rem(36);
   background-color: #23bb59;

@@ -2,14 +2,16 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import TopHead from './components/TopHead.vue'
+import './lib/hotcss/hotcss.js'
+import './lib/common.scss'
+import VeeValidate from 'vee-validate'
 
 Vue.config.productionTip = false
 
-import './lib/hotcss/hotcss.js'
-import './lib/common.scss'
-
-import VeeValidate from 'vee-validate'
 Vue.use(VeeValidate)
+// 全局注册TopHead组件
+Vue.component('TopHead', TopHead)
 
 // 路由守卫--当进行页面跳转前,校验是否已经进行过登录(这里通过vuex是否保存有用户信息判断)
 router.beforeEach((to, from, next) => {
