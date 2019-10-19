@@ -200,21 +200,6 @@ export default {
 }
 </script>
 
-<style lang="scss">
-//修改mintui样式，因为和本组件不是同一个组件,直接修改无效
-.mint-spinner-snake {
-  width: px2rem(64) !important;
-  height: px2rem(64) !important;
-}
-.mint-indicator-text {
-  font-size: px2rem(30) !important;
-}
-.mint-toast-text {
-  height: px2rem(40);
-  font-size: px2rem(40);
-}
-</style>
-
 <style lang="scss" scoped>
 .login {
   position: absolute;
