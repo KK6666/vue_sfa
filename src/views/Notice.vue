@@ -231,22 +231,4 @@ export default {
     }
   }
 }
-
-// sass不能解析>>>属性，这种情况下可以用deep，它是>>>的别名，工作原理相同。
-.mescroll /deep/ .upwarp-tip {
-  font-size: px2rem(30);
-}
-.mescroll /deep/ .downwarp-tip {
-  font-size: px2rem(30);
-}
-.mescroll /deep/ .upwarp-nodata {
-  font-size: px2rem(30);
-}
-</style>
-
-<style lang="scss">
-.mescroll-totop {
-  width: px2rem(80);
-  height: px2rem(80);
-}
 </style>

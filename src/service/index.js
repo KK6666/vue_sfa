@@ -48,17 +48,15 @@ export default {
   setNoticeReaded(id) {
     return axios.post(`/api/auth/notice/:${id}`)
   },
-  // 获取所有店铺,根据设备定位地理坐标获取
-  getShops(Lng, Lat, q) {
-    return axios.get(
-      `/api/auth/shop?_page=1&_limit=10&_order=asc&_sort=distance`,
-      {
-        params: {
-          Lng,
-          Lat,
-          q
-        }
+  // 获取所有店铺,根据设备定位地理坐标获取(q-搜索关键字)
+  getShops(Lng, Lat, q, _page) {
+    return axios.get(`/api/auth/shop?_limit=10&_order=asc&_sort=distance`, {
+      params: {
+        Lng,
+        Lat,
+        q,
+        _page
       }
-    )
+    })
   }
 }

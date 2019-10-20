@@ -25,4 +25,26 @@
   line-height: px2rem(30) !important;
   font-size: px2rem(30) !important;
 }
+
+// 修改mescroll样式
+.mescroll-totop {
+  width: px2rem(80) !important;
+  height: px2rem(80) !important;
+}
+.mescroll .upwarp-tip {
+  font-size: px2rem(30) !important;
+}
+.mescroll .downwarp-tip {
+  font-size: px2rem(30) !important;
+}
+.mescroll .upwarp-nodata {
+  font-size: px2rem(30) !important;
+}
+// 无数据样式
+.mescroll-empty {
+  background: white;
+  .empty-tip {
+    font-size: px2rem(30) !important;
+  }
+}
 </style>
