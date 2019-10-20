@@ -31,22 +31,29 @@
         </div>
       </div>
     </div>
-    <div class="main">
-      <ul class="listWrap">
-        <li v-for="item in shopList" :key="item.id" class="listItem">
-          <ul>
-            <li class="top">
-              <span>{{ item.name }}</span>
-              <span>
-                <i class="iconfont">&#xe61f;</i>&lt;{{ item.distance }}米
-              </span>
-            </li>
-            <li class="middle">{{ `id:${item.id}` }}</li>
-            <li class="bottom">{{ item.bossName }}</li>
-          </ul>
-          <i class="iconfont iR">&#xe84e;</i>
-        </li>
-      </ul>
+    <div id="main" ref="main" class="main">
+      <mescroll-vue
+        ref="mescroll"
+        :up="mescrollUp"
+        class="mescroll"
+        @init="mescrollInit"
+      >
+        <ul class="listWrap">
+          <li v-for="item in shopList" :key="item.id" class="listItem">
+            <ul>
+              <li class="top">
+                <span>{{ item.name }}</span>
+                <span>
+                  <i class="iconfont">&#xe61f;</i>&lt;{{ item.distance }}米
+                </span>
+              </li>
+              <li class="middle">{{ `id:${item.id}` }}</li>
+              <li class="bottom">{{ item.bossName }}</li>
+            </ul>
+            <i class="iconfont iR">&#xe84e;</i>
+          </li>
+        </ul>
+      </mescroll-vue>
     </div>
   </div>
 </template>
@@ -55,17 +62,48 @@
 import Tab from '../components/Tab'
 import service from '../service'
 import { Indicator, Toast } from 'mint-ui'
+import MescrollVue from 'mescroll.js/mescroll.vue'
 export default {
   name: 'VisitShop',
   components: {
-    Tab
+    Tab,
+    MescrollVue
   },
   data() {
     return {
       inputActive: false,
       inputVal: '',
       shopList: [],
-      pos: null
+      pos: null,
+
+      // mescroll相关
+      mescroll: null, // mescroll实例对象
+      mescrollUp: {
+        // 上拉加载的配置.
+        auto: false,
+        callback: this.upCallback, // 上拉回调,此处简写; 相当于 callback: function(page, mescroll) { }
+        //以下是一些常用的配置,当然不写也可以的.
+        page: {
+          num: 0, //当前页 默认0,回调之前会加1; 即callback(page)会从1开始
+          size: 10 //每页数据条数,默认10
+        },
+        htmlNodata: '<p class="upwarp-nodata">-- 我是有底线的 --</p>',
+        noMoreSize: 5, //如果列表已无数据,可设置列表的总数量要大于5才显示无更多数据;
+        // // 避免列表数据过少(比如只有一条数据),显示无更多数据会不好看
+        // // 这就是为什么无更多数据有时候不显示的原因
+        toTop: {
+          //回到顶部按钮
+          src: require('@/assets/img/mescroll-totop.png'), //图片路径,默认null,支持网络图
+          offset: 1000 //列表滚动1000px才显示回到顶部按钮
+        },
+        empty: {
+          //列表第一页无任何数据时,显示的空提示布局; 需配置warpId才显示
+          warpId: 'main', //父布局的id (1.3.5版本支持传入dom元素)
+          // icon: './static/mescroll/mescroll-empty.png', //图标,默认null,支持网络图
+          tip: '暂无相关数据' //提示
+        }
+      },
+      hasNext: true
     }
   },
   watch: {
@@ -74,15 +112,22 @@ export default {
         this.inputActive = true
       } else {
         this.inputActive = false
+        // 清空搜索内容时，获取一次数据
+        this.searchShops()
       }
     }
   },
   created() {
+    // 定位成功后请求shop数据（this.getLocation已用promise封装）
     this.getLocation()
       .then(() => this.searchShops())
       .catch(e => {
         console.log(e)
       })
+  },
+  mounted() {
+    // 设置mescroll定位的top值 ,下拉刷新关闭
+    this.setMescroll()
   },
   methods: {
     inputFocus() {
@@ -95,24 +140,9 @@ export default {
       this.inputVal = ''
       this.inputActive = false
     },
-    searchShops() {
-      Indicator.open('请求数据中...')
-      service
-        .getShops(this.pos.Lng, this.pos.Lat, this.inputVal)
-        .then(res => {
-          Indicator.close()
-          console.log(res)
-          this.shopList = res.data
-        })
-        .catch(e => {
-          Indicator.close()
-          console.log(e)
-          Toast('请求数据失败')
-        })
-    },
+    // 腾讯地图获取设备地理坐标（使用promise封装）
     getLocation() {
       Indicator.open('定位中...')
-      // 腾讯地图获取设备地理坐标（使用promise封装）
       return new Promise((resolve, reject) => {
         var geolocation = new window.qq.maps.Geolocation(
           '65DBZ-RNYK6-KRWS3-ESEJR-LL5VZ-NCBKQ',
@@ -133,6 +163,65 @@ export default {
           }
         )
       })
+    },
+    searchShops() {
+      // pos不存在（即未定位），不可以search
+      if (!this.pos) {
+        Toast('请先刷新页面重新点位')
+        return
+      }
+      // 搜索前，将数据清空，并且将mescroll的页码归0
+      this.shopList = []
+      this.mescrollUp.page.num = 0
+      // 主动触发上拉加载,注意this.upCallback是无效的。请求数据的axios写在upCallback里面，触发即可发起一次请求
+      this.mescroll.triggerUpScroll()
+    },
+    mescrollInit(mescroll) {
+      this.mescroll = mescroll // 如果this.mescroll对象没有使用到,则mescrollInit可以不用配置
+    },
+    setMescroll() {
+      // mescroll定位top
+      this.$refs.mescroll.$el.style.top = this.$refs.main.offsetTop + 'px'
+      // mescroll 下拉刷新关闭
+      this.mescroll.lockDownScroll(true)
+    },
+    upCallback(page, mescroll) {
+      console.log('upCallback')
+      Indicator.open('请求数据中...')
+      service
+        .getShops(this.pos.Lng, this.pos.Lat, this.inputVal, page.num)
+        // .getShops(1, 1, this.inputVal, page.num)
+        .then(res => {
+          console.log(res)
+          Indicator.close()
+
+          // 模拟搜索没有返回结果的情况（用服务器时删除）
+          if (this.inputVal.length >= 3) {
+            res.data = []
+          }
+          /////////////////////////////////////////////////////////////////////
+
+          this.shopList.push(...res.data)
+
+          // 模拟数据按照距离从小到大排序（用服务器时删除）
+          this.shopList.sort((a, b) => a.distance - b.distance)
+          /////////////////////////////////////////////////////////////////////
+
+          if (res.data.length <= 0 || this.shopList.length >= 60) {
+            this.hasNext = false
+          }
+          // 数据渲染成功后,隐藏下拉刷新的状态,可通过mescroll.endSuccess的第二个参数设置是否还有数据，列表如果无下一页数据,则提示无更多数据
+          this.$nextTick(() => {
+            mescroll.endSuccess(res.data.length, this.hasNext)
+          })
+        })
+        .catch(e => {
+          console.log(e)
+          Indicator.close()
+          Toast('请求数据失败')
+          // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;
+          mescroll.endErr()
+        })
     }
   }
 }
@@ -153,11 +242,18 @@ export default {
     flex-shrink: 0;
   }
   .main {
-    overflow-y: scroll;
-
+    // overflow-y: scroll;
     margin-top: px2rem(20);
-    // border-top: 1px solid #ccc;
+    background: pink;
   }
+}
+
+.mescroll {
+  position: fixed;
+  // top: 0;
+  bottom: 0;
+  height: auto;
+  z-index: 99;
 }
 
 // search部分
