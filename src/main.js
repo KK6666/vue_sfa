@@ -6,10 +6,14 @@ import TopHead from './components/TopHead.vue'
 import './lib/hotcss/hotcss.js'
 import './lib/common.scss'
 import VeeValidate from 'vee-validate'
+import inobounce from 'inobounce'
 
 Vue.config.productionTip = false
 
+// 验证
 Vue.use(VeeValidate)
+// inobounce解决ios的上下拉回弹动画
+Vue.use(inobounce)
 // 全局注册TopHead组件
 Vue.component('TopHead', TopHead)
 

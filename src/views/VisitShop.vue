@@ -129,13 +129,13 @@ export default {
   },
   created() {},
   mounted() {
-    // this.searchShops()
+    this.searchShops()
     // 定位成功后请求shop数据（this.getLocation已用promise封装）
-    this.getLocation()
-      .then(() => this.searchShops())
-      .catch(e => {
-        console.log(e)
-      })
+    // this.getLocation()
+    //   .then(() => this.searchShops())
+    //   .catch(e => {
+    //     console.log(e)
+    //   })
     // 设置mescroll定位的top值 ,下拉刷新关闭
     this.setMescroll()
   },
@@ -190,10 +190,10 @@ export default {
     },
     searchShops() {
       // pos不存在（即未定位），不可以search
-      if (!this.pos) {
-        Toast('请先刷新页面重新点位')
-        return
-      }
+      // if (!this.pos) {
+      //   Toast('请先刷新页面重新点位')
+      //   return
+      // }
       // 搜索前，将数据清空，并且将mescroll的页码归0
       this.emptyShopList()
       this.mescrollUp.page.num = 0
@@ -213,8 +213,8 @@ export default {
       console.log('upCallback')
       Indicator.open('请求数据中...')
       service
-        .getShops(this.pos.Lng, this.pos.Lat, this.inputVal, page.num)
-        // .getShops(1, 1, this.inputVal, page.num)
+        // .getShops(this.pos.Lng, this.pos.Lat, this.inputVal, page.num)
+        .getShops(1, 1, this.inputVal, page.num)
         .then(res => {
           console.log(res)
           Indicator.close()

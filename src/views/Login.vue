@@ -12,7 +12,10 @@
           <!-- errors.has('comNum')———判断错误集合中，name为comNum的input是否有错误，有则返回true -->
           <div
             class="login-input-field"
-            :class="{ active: active_index === 1, error: errors.has('comNum') }"
+            :class="{
+              active: active_index === 1,
+              error: errors.has('comNum')
+            }"
           >
             <label for="comNum">公司编码:</label>
             <input
@@ -29,7 +32,10 @@
           </div>
           <div
             class="login-input-field"
-            :class="{ active: active_index === 2, error: errors.has('empNum') }"
+            :class="{
+              active: active_index === 2,
+              error: errors.has('empNum')
+            }"
           >
             <label for="empNum">员工编号:</label>
             <input
@@ -202,6 +208,7 @@ export default {
 
 <style lang="scss" scoped>
 .login {
+  overflow-x: hidden;
   position: absolute;
   top: 0;
   bottom: 0;
@@ -226,23 +233,23 @@ export default {
   }
   .login-main-con {
     width: px2rem(600);
-    height: px2rem(836);
+    height: px2rem(736);
     background-color: #fff;
     margin: 0 auto;
     border-radius: px2rem(14);
     .logo-wrap {
-      height: px2rem(190);
-      padding-top: px2rem(80);
+      height: px2rem(150);
+      padding-top: px2rem(40);
       .logo {
-        width: px2rem(190);
-        height: px2rem(190);
+        width: px2rem(150);
+        height: px2rem(150);
         background-image: url(../assets/logo.png);
         background-size: cover;
         margin: 0 auto;
       }
     }
     .login-input-group {
-      margin-top: px2rem(80);
+      margin-top: px2rem(40);
       .login-input-field {
         width: px2rem(440);
         height: px2rem(90);

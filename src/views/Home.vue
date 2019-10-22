@@ -41,6 +41,7 @@ import TopHead from '../components/TopHead'
 import Pie from '../components/Pie'
 import Topic from '../components/Topic'
 import service from '../service'
+
 const topicList = [
   {
     menuName: '公司通告',
@@ -130,7 +131,9 @@ export default {
     flex-shrink: 0;
   }
   .main {
-    overflow-y: scroll;
+    height: 100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }
 

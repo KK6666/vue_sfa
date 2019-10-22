@@ -61,7 +61,7 @@ export default {
 <style lang="scss" scoped>
 .wrapper {
   .pieWrapper {
-    // position: relative;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
