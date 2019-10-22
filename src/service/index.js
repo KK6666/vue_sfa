@@ -46,7 +46,7 @@ export default {
   },
   // 设置公告已读
   setNoticeReaded(id) {
-    return axios.post(`/api/auth/notice/:${id}`)
+    return axios.post(`/api/auth/notice/${id}`)
   },
   // 获取所有店铺,根据设备定位地理坐标获取(q-搜索关键字)
   getShops(Lng, Lat, q, _page) {
@@ -58,5 +58,10 @@ export default {
         _page
       }
     })
+  },
+  // 获取店铺销售进度
+  getShopSales(id) {
+    // return axios.get(`/api/auth/shopSales/${id}`)
+    return axios.get('/api/auth/shopSales/' + id)
   }
 }

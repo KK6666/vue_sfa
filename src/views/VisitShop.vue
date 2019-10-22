@@ -39,7 +39,12 @@
         @init="mescrollInit"
       >
         <ul class="listWrap">
-          <li v-for="item in shopList" :key="item.id" class="listItem">
+          <router-link
+            v-for="item in shopList"
+            :key="item.id"
+            :to="`/visitshop/${item.id}`"
+            class="listItem"
+          >
             <ul>
               <li class="top">
                 <span>{{ item.name }}</span>
@@ -51,7 +56,7 @@
               <li class="bottom">{{ item.bossName }}</li>
             </ul>
             <i class="iconfont iR">&#xe84e;</i>
-          </li>
+          </router-link>
         </ul>
       </mescroll-vue>
     </div>
@@ -63,6 +68,7 @@ import Tab from '../components/Tab'
 import service from '../service'
 import { Indicator, Toast } from 'mint-ui'
 import MescrollVue from 'mescroll.js/mescroll.vue'
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'VisitShop',
   components: {
@@ -73,7 +79,6 @@ export default {
     return {
       inputActive: false,
       inputVal: '',
-      shopList: [],
       pos: null,
 
       // mescroll相关
@@ -106,6 +111,11 @@ export default {
       hasNext: true
     }
   },
+  computed: {
+    ...mapState({
+      shopList: 'shopList'
+    })
+  },
   watch: {
     inputVal() {
       if (this.inputVal) {
@@ -117,19 +127,33 @@ export default {
       }
     }
   },
-  created() {
+  created() {},
+  mounted() {
+    // this.searchShops()
     // 定位成功后请求shop数据（this.getLocation已用promise封装）
     this.getLocation()
       .then(() => this.searchShops())
       .catch(e => {
         console.log(e)
       })
-  },
-  mounted() {
     // 设置mescroll定位的top值 ,下拉刷新关闭
     this.setMescroll()
   },
+  beforeRouteEnter(to, from, next) {
+    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
+    next(vm => {
+      // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteEnter方法
+      vm.$refs.mescroll && vm.$refs.mescroll.beforeRouteEnter() // 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置
+    })
+  },
+  beforeRouteLeave(to, from, next) {
+    // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
+    // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteLeave方法
+    this.$refs.mescroll && this.$refs.mescroll.beforeRouteLeave() // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置
+    next()
+  },
   methods: {
+    ...mapMutations(['shopListPush', 'emptyShopList']),
     inputFocus() {
       this.$refs.input.placeholder = ''
     },
@@ -171,7 +195,7 @@ export default {
         return
       }
       // 搜索前，将数据清空，并且将mescroll的页码归0
-      this.shopList = []
+      this.emptyShopList()
       this.mescrollUp.page.num = 0
       // 主动触发上拉加载,注意this.upCallback是无效的。请求数据的axios写在upCallback里面，触发即可发起一次请求
       this.mescroll.triggerUpScroll()
@@ -201,12 +225,7 @@ export default {
           }
           /////////////////////////////////////////////////////////////////////
 
-          this.shopList.push(...res.data)
-
-          // 模拟数据按照距离从小到大排序（用服务器时删除）
-          this.shopList.sort((a, b) => a.distance - b.distance)
-          /////////////////////////////////////////////////////////////////////
-
+          this.shopListPush(res.data)
           if (res.data.length <= 0 || this.shopList.length >= 60) {
             this.hasNext = false
           }
