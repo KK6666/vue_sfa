@@ -43,7 +43,7 @@
           下单
         </div>
         <div class="btn active">
-          <router-link :to="`/shopsignin/${$route.params.id}`">
+          <router-link :to="`/shopsign/${$route.params.id}`">
             商铺签到
           </router-link>
         </div>
