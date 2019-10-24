@@ -215,12 +215,15 @@ export default {
   left: 0;
   right: 0;
   background-color: #2ade69 !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .title {
   color: #fff;
   font-size: px2rem(36);
   text-align: center;
-  padding-top: px2rem(148-40-36);
+  // padding-top: px2rem(148-40-36);
 }
 .login-con-wrap {
   margin-top: px2rem(40);

@@ -88,7 +88,7 @@ export default {
       service
         .getShopSales(id)
         .then(res => {
-          console.log(res.data)
+          console.log(res)
           // this.shopSales = res.data
           // 使用GreenSock实现进度条动画，查看vue文档示例TweenLite.to(要变化的属性, 动画时间, 属性最后要变成的值)
           // eslint-disable-next-line

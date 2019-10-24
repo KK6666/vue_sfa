@@ -29,7 +29,7 @@ export default {
   width: px2rem(210);
   height: px2rem(210);
   border: 1px solid #ccc;
-  margin: 0 px2rem(20) px2rem(20) 0;
+
   display: flex;
   flex-direction: column;
   justify-content: center;

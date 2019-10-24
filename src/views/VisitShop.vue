@@ -263,7 +263,6 @@ export default {
   .main {
     // overflow-y: scroll;
     margin-top: px2rem(20);
-    background: pink;
   }
 }
 
@@ -272,7 +271,7 @@ export default {
   // top: 0;
   bottom: 0;
   height: auto;
-  z-index: 99;
+  // z-index: 99;
 }
 
 // search部分

@@ -63,5 +63,21 @@ export default {
   getShopSales(id) {
     // return axios.get(`/api/auth/shopSales/${id}`)
     return axios.get('/api/auth/shopSales/' + id)
+  },
+  // 文件上传
+  // 请求表单中，文件对应的name必须为： imgF;文件上传限制文件大小： 2M，目前只支持上传一张图片。
+  uploadImg(formData) {
+    return axios({
+      url: '/api/upload',
+      method: 'POST',
+      headers: {
+        // 指定传输数据为二进制数据，例如图片、mp3、文件
+        'Content-Type': 'multipart/form-data'
+      },
+      data: formData
+    })
+  },
+  submitSigin(data) {
+    return axios.post('/api/auth/SignIn', data)
   }
 }

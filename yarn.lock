@@ -2007,6 +2007,11 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000989, caniuse-lite@^1.0.30000998:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000998.tgz#7227a8046841e7d01e156ae7227a504d065f6744"
   integrity sha512-8Tj5sPZR9kMHeDD9SZXIVr5m9ofufLLCG2Y4QwQrH18GIwG+kCc+zYdlR036ZRkuKjVVetyxeAgGA1xF7XdmzQ==
 
+canvas-resize@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/canvas-resize/-/canvas-resize-1.1.0.tgz#74854d326e59618cbaa30218a4155e854456abe3"
+  integrity sha512-A+GhYTwHjHUTQ6m8jzzPrYNre9PykztQa41uaLgxM7tpPPx6NcMpaI2rIf/rZNrOUYSnYmEmu4i8wt8w7rnufQ==
+
 case-sensitive-paths-webpack-plugin@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.2.0.tgz#3371ef6365ef9c25fa4b81c16ace0e9c7dc58c3e"
