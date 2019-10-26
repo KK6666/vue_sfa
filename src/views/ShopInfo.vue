@@ -78,6 +78,8 @@ export default {
     this.getShopSales(this.id)
 
     this.thisShop = this.shopList.find(item => item.id == this.id)
+    // 将当前要下订单门店信息存入store（{ ...this.thisShop }写法保证存入一个与当前this.thisShop指向不同的新对象）
+    this.$store.commit('initCurOrderShop', { ...this.thisShop })
   },
   mounted() {},
   methods: {

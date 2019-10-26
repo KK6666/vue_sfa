@@ -82,12 +82,9 @@ export default {
     return axios.post('/api/auth/SignIn', data)
   },
   // 获取货物信息
-  getGoods(q, _page) {
-    return axios.get('/api/auth/goods?_limit=15', {
-      params: {
-        q,
-        _page
-      }
+  getGoods(data) {
+    return axios.get('/api/auth/goods', {
+      params: data
     })
   }
 }

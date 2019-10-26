@@ -54,7 +54,7 @@ import service from '../service'
 import { Indicator, Toast } from 'mint-ui'
 import MescrollVue from 'mescroll.js/mescroll.vue'
 import { mapState, mapMutations } from 'vuex'
-import Utility from '../common/Utility'
+// import Utility from '../common/Utility'
 export default {
   name: 'VisitShop',
   components: {
@@ -104,16 +104,16 @@ export default {
   },
   created() {},
   mounted() {
-    // this.getData()
+    this.getData()
     // 定位成功后请求shop数据（getLocation已用promise封装）
-    Utility.getLocation()
-      .then(pos => {
-        this.pos = pos
-        this.getData()
-      })
-      .catch(e => {
-        console.log(e)
-      })
+    // Utility.getLocation()
+    //   .then(pos => {
+    //     this.pos = pos
+    //     this.getData()
+    //   })
+    //   .catch(e => {
+    //     console.log(e)
+    //   })
     // 设置mescroll定位的top值 ,下拉刷新关闭
     this.setMescroll()
   },
@@ -129,10 +129,10 @@ export default {
     },
     getData() {
       // pos不存在（即未定位），不可以search
-      if (!this.pos) {
-        Toast('请先刷新页面重新点位')
-        return
-      }
+      // if (!this.pos) {
+      //   Toast('请先刷新页面重新点位')
+      //   return
+      // }
       // 搜索前，将数据清空，并且将mescroll的页码归0
       this.emptyShopList()
       this.mescrollUp.page.num = 0
@@ -153,8 +153,8 @@ export default {
       console.log('upCallback')
       Indicator.open('请求数据中...')
       service
-        .getShops(this.pos.Lng, this.pos.Lat, this.q, page.num)
-        // .getShops(1, 1, this.q, page.num)
+        // .getShops(this.pos.Lng, this.pos.Lat, this.q, page.num)
+        .getShops(1, 1, this.q, page.num)
         .then(res => {
           console.log(res)
           Indicator.close()

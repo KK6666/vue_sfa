@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+// 保证vuex在页面刷新不会清空
 import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
@@ -13,7 +14,8 @@ export default new Vuex.Store({
     LoginUser: userData,
     noticeList: [],
     shopList: [],
-    goods: []
+    goods: [],
+    curOrderShop: null
   },
   mutations: {
     saveUserData(state, userData) {
@@ -47,6 +49,10 @@ export default new Vuex.Store({
     // 清空goods数组
     emptyGoods(state) {
       state.goods = []
+    },
+    // 将当前下订单门店信息存入store（在shopInfo组件完成）
+    initCurOrderShop(state, shopInfo) {
+      state.curOrderShop = shopInfo
     }
   },
   actions: {},

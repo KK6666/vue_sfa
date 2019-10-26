@@ -12,8 +12,8 @@
     <!-- 导航区 -->
     <div class="nav-wrap">
       <ul>
-        <li :class="{ act: isOnSales }">促销</li>
-        <li :class="{ act: isAll }">全部</li>
+        <li :class="{ act: isOnSales }" @click="isOnSalesStatus">促销</li>
+        <li :class="{ act: isAll }" @click="isAllStatus">全部</li>
         <li>SKU-L</li>
         <li>PSKU-N</li>
         <li>PSKU</li>
@@ -24,7 +24,7 @@
       <div class="fl count-wrap">{{ cur }} / {{ total }}</div>
       <div class="fr">
         <ul class="type-list-wrap" @click="showSelectGoodsType = true">
-          <li>食品</li>
+          <li>{{ getFilterGoodsType }}</li>
           <li><i class="icon iconfont icon-filter"></i></li>
         </ul>
       </div>
@@ -78,11 +78,11 @@ export default {
     return {
       showSelectGoodsType: false,
       q: '',
-      isOnSales: false,
-      isAll: true,
+      isOnSales: false, // 是否是促销，获取goods的参数一项为是否获取促销数据
+      isAll: true, //是否是全部数据
       total: 0,
       cur: 0,
-      filterGoodsType: ['食品', '日化', '宝洁'],
+      filterGoodsType: ['食品', '日化', '电器'],
       loading: false,
 
       // mescroll相关
@@ -94,7 +94,7 @@ export default {
         //以下是一些常用的配置,当然不写也可以的.
         page: {
           num: 0, //当前页 默认0,回调之前会加1; 即callback(page)会从1开始
-          size: 10 //每页数据条数,默认10
+          size: 15 //每页数据条数,默认10
         },
         htmlNodata: '<p class="upwarp-nodata">-- 我是有底线的 --</p>',
         noMoreSize: 5, //如果列表已无数据,可设置列表的总数量要大于5才显示无更多数据;
@@ -118,7 +118,10 @@ export default {
   computed: {
     ...mapState({
       goods: 'goods'
-    })
+    }),
+    getFilterGoodsType() {
+      return this.filterGoodsType.join('/')
+    }
   },
   created() {},
   mounted() {
@@ -143,6 +146,16 @@ export default {
       // 主动触发一次上拉加载,注意this.upCallback的写法是无效的。请求数据的axios写在upCallback里面，触发即可发起一次请求
       this.mescroll.triggerUpScroll()
     },
+    isOnSalesStatus() {
+      this.isOnSales = true
+      this.isAll = false
+      this.getData()
+    },
+    isAllStatus() {
+      this.isOnSales = false
+      this.isAll = true
+      this.getData()
+    },
     // mescroll组件初始化的回调,可获取到mescroll对象
     mescrollInit(mescroll) {
       this.mescroll = mescroll // 如果this.mescroll对象没有使用到,则mescrollInit可以不用配置
@@ -151,21 +164,44 @@ export default {
     upCallback(page, mescroll) {
       console.log('upCallback')
       Indicator.open('请求数据中...')
+
+      // 如果isOnSales激活了，就给params添加onsales：true，请求只会返回onsales的数据，否则默认返回所有数据
+      let params = { q: this.q, _page: page.num, _limit: page.size }
+      if (this.isOnSales) {
+        params.onsales = this.isOnSales
+      }
       service
-        .getGoods(this.q, page.num)
+        .getGoods(params)
         .then(res => {
           console.log(res)
           Indicator.close()
 
-          // // 模拟搜索没有返回结果的情况（用服务器时可删除）
+          // 使用yapi时，模拟搜索没有返回结果的情况（用服务器时可注释）///////////////
           // if (this.q.length >= 4) {
           //   res.data = []
           // }
           /////////////////////////////////////////////////////////////////////
 
           this.goodsPush(res.data)
-          console.log(this.goods)
-          if (res.data.length <= 0 || this.goods.length >= 60) {
+          this.total = res.headers['x-total-count']
+
+          //  使用yapi时，设置this.total（用服务器时注释）/////////////////////
+          // this.total = res.headers['x-total-count']
+          //   ? res.headers['x-total-count']
+          //   : this.isOnSales
+          //   ? 159
+          //   : 320
+          //////////////////////////////////////////////////////////////////
+
+          if (this.total <= page.size) {
+            this.cur = this.total
+          } else {
+            this.cur = page.num * page.size
+            if (this.cur >= this.total) {
+              this.cur = this.total
+            }
+          }
+          if (res.data.length <= 0 || this.goods.length >= 320) {
             this.hasNext = false
           }
           // 数据渲染成功后,隐藏下拉刷新的状态,可通过mescroll.endSuccess的第二个参数设置是否还有数据，列表如果无下一页数据,则提示无更多数据

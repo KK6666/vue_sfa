@@ -1,7 +1,10 @@
 <template>
   <div class="goods-item">
     <div class="img-box">
-      <img :src="goods.img" :alt="goods.title" />
+      <img
+        src="http://img3.imgtn.bdimg.com/it/u=2165682634,1275439937&fm=26&gp=0.jpg"
+        :alt="goods.title"
+      />
     </div>
     <div class="desc-wrap">
       <h3 class="goods-title">{{ goods.title }}</h3>
@@ -61,16 +64,17 @@ export default {
     font-size: px2rem(25);
     line-height: px2rem(20);
     color: #666;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     .goods-title {
       font-size: px2rem(30);
       color: #000;
-      margin-bottom: px2rem(20);
-      line-height: px2rem(26);
-      height: px2rem(26);
+      line-height: px2rem(30);
+      height: px2rem(30);
     }
     .aside-info-wrap {
       height: px2rem(20);
-      margin-bottom: px2rem(34);
       span:first-child {
         margin-right: px2rem(60);
       }
