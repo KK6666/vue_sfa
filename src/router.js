@@ -8,6 +8,7 @@ import NoticeDetail from './views/NoticeDetail.vue'
 import VisitShop from './views/VisitShop.vue'
 import ShopInfo from './views/ShopInfo.vue'
 import Sign from './views/Sign.vue'
+import Order from './views/Order.vue'
 import t from './views/t.vue'
 
 Vue.use(Router)
@@ -53,6 +54,11 @@ export default new Router({
       path: '/shopsign/:id',
       name: 'Sign',
       component: Sign
+    },
+    {
+      path: '/order/:id',
+      name: 'Order',
+      component: Order
     },
     {
       path: '/t',

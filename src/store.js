@@ -12,7 +12,8 @@ export default new Vuex.Store({
   state: {
     LoginUser: userData,
     noticeList: [],
-    shopList: []
+    shopList: [],
+    goods: []
   },
   mutations: {
     saveUserData(state, userData) {
@@ -38,6 +39,14 @@ export default new Vuex.Store({
     // 清空shopList数组
     emptyShopList(state) {
       state.shopList = []
+    },
+    // goods数组push数据
+    goodsPush(state, data) {
+      state.goods.push(...data)
+    },
+    // 清空goods数组
+    emptyGoods(state) {
+      state.goods = []
     }
   },
   actions: {},

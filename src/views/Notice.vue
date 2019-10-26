@@ -52,6 +52,8 @@ export default {
   },
   data() {
     return {
+      latestDate: new Date(),
+      earlistDate: new Date(),
       mescroll: null, // mescroll实例对象
       mescrollDown: {
         auto: false,
@@ -59,16 +61,16 @@ export default {
       }, //下拉刷新的配置. (如果下拉刷新和上拉加载处理的逻辑是一样的,则mescrollDown可不用写了)
       mescrollUp: {
         // 上拉加载的配置.
-        auto: false,
+        auto: true,
         callback: this.upCallback, // 上拉回调,此处简写; 相当于 callback: function(page, mescroll) { }
         htmlNodata: '<p class="upwarp-nodata">-- 我是有底线的 --</p>',
         toTop: {
           //回到顶部按钮
           src: require('@/assets/img/mescroll-totop.png'), //图片路径,默认null,支持网络图
           offset: 1000 //列表滚动1000px才显示回到顶部按钮
-        },
-        isBounce: false //ios下拉刷新时会出现首次加载无法下拉bug，加入此配置可解决（注意本项目中全局使用了inobounce，可能会有影响）
+        }
       },
+      // 用来给mescroll传递判断是否还有数据
       hasNext: true
     }
   },
@@ -77,27 +79,7 @@ export default {
       noticeList: 'noticeList'
     })
   },
-  mounted() {
-    // 从noticeDetail返回时，会再此触发mounted，如果noticeList已经有数据了，就不要再发起axios
-    if (this.noticeList.length) {
-      return
-    }
-    // 最早一条公告时间设为为当前时间，并以当前时间为第一条时间加载(这里可以用mescroll在页面初始化时直接触发一次upCallback，不必再自己手动写第一次加载)
-    service
-      .getNotice(new Date(), 10, true)
-      .then(res => {
-        this.noticeListPush(res.data.data.messages.reverse())
-        // earlistDate等于公告列表里最早一条的时间，作为下拉加载之前数据的earlistDate
-        this.earlistDate = new Date(
-          this.noticeList[this.noticeList.length - 1].SubDate
-        )
-        // latestDatee等于公告列表里最晚一条的时间，作为下拉加载之前数据的earlistDate
-        this.latestDate = new Date(this.noticeList[0].SubDate)
-      })
-      .catch(e => {
-        console.log(e)
-      })
-  },
+  created() {},
   beforeRouteEnter(to, from, next) {
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
     next(vm => {
@@ -122,6 +104,7 @@ export default {
         .getNotice(this.latestDate, 10, false)
         .then(res => {
           this.noticeListPush(res.data.data.messages.reverse())
+          // latestDatee等于公告列表里最晚一条的时间，作为下拉加载之前数据的earlistDate
           this.latestDate = new Date(this.noticeList[0].SubDate)
           if (this.noticeList.length > 60) {
             this.hasNext = false
@@ -137,8 +120,8 @@ export default {
         })
     },
     downCallback(mescroll) {
-      console.log(mescroll)
       console.log('downCallback')
+      console.log(this.earlistDate)
       service
         .getNotice(this.earlistDate, 10, true)
         .then(res => {
@@ -147,6 +130,7 @@ export default {
             return
           }
           this.noticeListUnshift(res.data.data.messages.reverse())
+          // earlistDate等于公告列表里最早一条的时间，作为下拉加载之前数据的earlistDate
           this.earlistDate = new Date(
             this.noticeList[this.noticeList.length - 1].SubDate
           )
@@ -178,7 +162,6 @@ export default {
   }
   .main {
     // overflow: scroll;
-    height: 100%;
   }
 }
 

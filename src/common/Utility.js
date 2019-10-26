@@ -1,3 +1,5 @@
+import { Indicator, Toast } from 'mint-ui'
+
 export default {
   /**
    * 将以base64的图片url数据转换为Blob
@@ -13,5 +15,29 @@ export default {
       ia[i] = bytes.charCodeAt(i)
     }
     return new Blob([ab], type)
+  },
+
+  // 腾讯地图获取设备地理坐标（使用promise封装）
+  getLocation() {
+    Indicator.open('定位中...')
+    return new Promise((resolve, reject) => {
+      var geolocation = new window.qq.maps.Geolocation(
+        '65DBZ-RNYK6-KRWS3-ESEJR-LL5VZ-NCBKQ',
+        'myapp'
+      )
+      geolocation.getLocation(
+        position => {
+          Indicator.close()
+          console.log(position)
+          resolve(position)
+        },
+        () => {
+          Indicator.close()
+          reject()
+          Toast('定位失败，请刷新重试')
+          console.log('定位失败')
+        }
+      )
+    })
   }
 }

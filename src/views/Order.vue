@@ -1,72 +1,90 @@
 <template>
-  <div class="visitShop view">
-    <TopHead title="进店拜访" class="header"></TopHead>
-    <Tab class="tab">
-      <template v-slot:titleL
-        >计划内
-      </template>
-      <template v-slot:titleR>
-        计划外
-      </template>
-    </Tab>
+  <div class="order view">
+    <TopHead title="下单" class="header">
+      <div slot="r"><i class="icon iconfont icon-cart"></i></div>
+    </TopHead>
     <Search
       v-model="q"
       class="search"
       @handleSearch="handleSearch"
       @inputClear="inputClear"
     ></Search>
-    <div id="main" ref="main" class="main">
-      <mescroll-vue
-        ref="mescroll"
-        :up="mescrollUp"
-        class="mescroll"
-        @init="mescrollInit"
-      >
-        <ul class="listWrap">
-          <router-link
-            v-for="item in shopList"
-            :key="item.id"
-            :to="`/visitshop/${item.id}`"
-            class="listItem"
-          >
-            <ul>
-              <li class="top">
-                <span>{{ item.name }}</span>
-                <span>
-                  <i class="iconfont">&#xe61f;</i>&lt;{{ item.distance }}米
-                </span>
-              </li>
-              <li class="middle">{{ `id:${item.id}` }}</li>
-              <li class="bottom">{{ item.bossName }}</li>
-            </ul>
-            <i class="iconfont iR">&#xe84e;</i>
-          </router-link>
+    <!-- 导航区 -->
+    <div class="nav-wrap">
+      <ul>
+        <li :class="{ act: isOnSales }">促销</li>
+        <li :class="{ act: isAll }">全部</li>
+        <li>SKU-L</li>
+        <li>PSKU-N</li>
+        <li>PSKU</li>
+      </ul>
+    </div>
+    <!--  商品列表区域 -->
+    <div class="goods-header">
+      <div class="fl count-wrap">{{ cur }} / {{ total }}</div>
+      <div class="fr">
+        <ul class="type-list-wrap" @click="showSelectGoodsType = true">
+          <li>食品</li>
+          <li><i class="icon iconfont icon-filter"></i></li>
+        </ul>
+      </div>
+    </div>
+    <div id="main" ref="main" class="goods-list-wrap main">
+      <mescroll-vue ref="mescroll" :up="mescrollUp" @init="mescrollInit">
+        <ul class="goods-list">
+          <li v-for="item in goods" :key="item.id">
+            <GoodsListItem :number-visible="true" :goods="item"></GoodsListItem>
+          </li>
         </ul>
       </mescroll-vue>
     </div>
+    <popup v-model="showSelectGoodsType">
+      <Checklist
+        v-model="filterGoodsType"
+        title="请选择"
+        :options="['食品', '日化', '电器']"
+      >
+      </Checklist>
+      <Button
+        type="default"
+        class="btn-select-type"
+        @click="showSelectGoodsType = false"
+      >
+        确定
+      </Button>
+    </popup>
   </div>
 </template>
 
 <script>
-import Tab from '../components/Tab'
 import Search from '../components/Search'
 import service from '../service'
-import { Indicator, Toast } from 'mint-ui'
+import GoodsListItem from '../components/GoodsListItem'
+import { Popup, Checklist, Button, Toast, Indicator } from 'mint-ui'
 import MescrollVue from 'mescroll.js/mescroll.vue'
 import { mapState, mapMutations } from 'vuex'
-import Utility from '../common/Utility'
+
 export default {
-  name: 'VisitShop',
+  name: 'Order',
   components: {
-    Tab,
-    MescrollVue,
-    Search
+    Search,
+    GoodsListItem,
+    Popup,
+    Checklist,
+    Button,
+    MescrollVue
   },
   data() {
     return {
-      inputActive: false,
+      showSelectGoodsType: false,
       q: '',
-      pos: null,
+      isOnSales: false,
+      isAll: true,
+      total: 0,
+      cur: 0,
+      filterGoodsType: ['食品', '日化', '宝洁'],
+      loading: false,
+
       // mescroll相关
       mescroll: null, // mescroll实例对象
       mescrollUp: {
@@ -99,27 +117,17 @@ export default {
   },
   computed: {
     ...mapState({
-      shopList: 'shopList'
+      goods: 'goods'
     })
   },
   created() {},
   mounted() {
-    // this.getData()
-    // 定位成功后请求shop数据（getLocation已用promise封装）
-    Utility.getLocation()
-      .then(pos => {
-        this.pos = pos
-        this.getData()
-      })
-      .catch(e => {
-        console.log(e)
-      })
     // 设置mescroll定位的top值 ,下拉刷新关闭
     this.setMescroll()
+    this.getData()
   },
   methods: {
-    ...mapMutations(['shopListPush', 'emptyShopList']),
-    // 当搜索栏请空时，发起一次新的请求，避免页面无有用数据，增强用户体验
+    ...mapMutations(['goodsPush', 'emptyGoods']),
     handleSearch() {
       this.getData()
     },
@@ -128,45 +136,36 @@ export default {
       this.getData()
     },
     getData() {
-      // pos不存在（即未定位），不可以search
-      if (!this.pos) {
-        Toast('请先刷新页面重新点位')
-        return
-      }
       // 搜索前，将数据清空，并且将mescroll的页码归0
-      this.emptyShopList()
+      this.emptyGoods()
       this.mescrollUp.page.num = 0
       this.hasNext = true
-      // 主动触发上拉加载,注意this.upCallback是无效的。请求数据的axios写在upCallback里面，触发即可发起一次请求
+      // 主动触发一次上拉加载,注意this.upCallback的写法是无效的。请求数据的axios写在upCallback里面，触发即可发起一次请求
       this.mescroll.triggerUpScroll()
     },
-    setMescroll() {
-      // mescroll定位top
-      this.$refs.mescroll.$el.style.top = this.$refs.main.offsetTop + 'px'
-      // mescroll 下拉刷新关闭
-      this.mescroll.lockDownScroll(true)
-    },
+    // mescroll组件初始化的回调,可获取到mescroll对象
     mescrollInit(mescroll) {
       this.mescroll = mescroll // 如果this.mescroll对象没有使用到,则mescrollInit可以不用配置
     },
+    // 上拉回调 page = {num:1, size:10}; num:当前页 ,默认从1开始; size:每页数据条数,默认10
     upCallback(page, mescroll) {
       console.log('upCallback')
       Indicator.open('请求数据中...')
       service
-        .getShops(this.pos.Lng, this.pos.Lat, this.q, page.num)
-        // .getShops(1, 1, this.q, page.num)
+        .getGoods(this.q, page.num)
         .then(res => {
           console.log(res)
           Indicator.close()
 
-          // 模拟搜索没有返回结果的情况（用服务器时删除）
-          if (this.q.length >= 3) {
-            res.data = []
-          }
+          // // 模拟搜索没有返回结果的情况（用服务器时可删除）
+          // if (this.q.length >= 4) {
+          //   res.data = []
+          // }
           /////////////////////////////////////////////////////////////////////
 
-          this.shopListPush(res.data)
-          if (res.data.length <= 0 || this.shopList.length >= 60) {
+          this.goodsPush(res.data)
+          console.log(this.goods)
+          if (res.data.length <= 0 || this.goods.length >= 60) {
             this.hasNext = false
           }
           // 数据渲染成功后,隐藏下拉刷新的状态,可通过mescroll.endSuccess的第二个参数设置是否还有数据，列表如果无下一页数据,则提示无更多数据
@@ -181,6 +180,12 @@ export default {
           // 联网失败的回调,隐藏下拉刷新和上拉加载的状态;
           mescroll.endErr()
         })
+    },
+    setMescroll() {
+      // mescroll定位top
+      this.$refs.mescroll.$el.style.top = this.$refs.main.offsetTop + 'px'
+      // mescroll 下拉刷新关闭
+      this.mescroll.lockDownScroll(true)
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -208,71 +213,85 @@ export default {
   width: 100%;
   height: 100%;
   .header,
-  .tab,
-  .search {
-    // 如果内容超出页面高度，子元素的flex-shrink默认为1，head设置的高度会缩小，设置为0后不会缩小
+  .search,
+  .goods-header {
+    // TopHead的父组件（也就是整个页面）会全部使用flex布局，如果内容超出页面高度，子元素的flex-shrink默认为1，head设置的高度会缩小，设置为0后不会缩小
     flex-shrink: 0;
   }
   .main {
-    // overflow-y: scroll;
-    margin-top: px2rem(20);
+    // overflow: scroll;
   }
-}
-.search {
-  margin-top: px2rem(20);
 }
 .mescroll {
   position: fixed;
-  // top: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
   height: auto;
-  // z-index: 99;
 }
-.listWrap {
-  .listItem {
-    height: px2rem(150);
-    margin: 0 5%;
-    padding: px2rem(15) 0;
-    border-bottom: 1px solid #ccc;
+.search {
+  margin-top: px2rem(20);
+  margin-bottom: px2rem(20);
+}
+.nav-wrap {
+  background-color: #fafafa;
+  padding: px2rem(14) px2rem(28);
+  font-size: px2rem(30);
+  border: px2rem(1) solid #ccc;
+  border-left: none;
+  border-right: none;
+  ul {
     display: flex;
     align-items: center;
-    // background: pink;
-    ul {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      width: 90%;
-      .top {
-        height: px2rem(30);
-        line-height: px2rem(30);
-        font-size: px2rem(30);
-        // background: pink;
-        display: flex;
-        justify-content: space-between;
-        i {
-          font-size: px2rem(30);
-        }
-      }
-      .middle {
-        height: px2rem(25);
-        line-height: px2rem(25);
-        font-size: px2rem(25);
-        // background: pink;
-      }
-      .bottom {
-        height: px2rem(25);
-        line-height: px2rem(25);
-        font-size: px2rem(25);
-        // background: pink;
-      }
+    height: px2rem(58);
+    line-height: px2rem(58);
+    text-align: center;
+    li {
+      height: px2rem(68);
+      flex: 1;
+      border-right: px2rem(1) solid #ccc;
+      line-height: px2rem(68);
+      // background-color: pink;
     }
-    .iR {
-      font-size: px2rem(30);
-      // background: pink;
-      width: 10%;
-      text-align: right;
+    li:last-child {
+      border-right: none;
+    }
+    .act {
+      color: #04afeb;
     }
   }
+}
+.goods-header {
+  margin: 0 px2rem(28);
+  // padding-right: px2rem(28);
+  overflow: hidden;
+  border-bottom: 1px solid #ccc;
+  .count-wrap,
+  .type-list-wrap {
+    height: px2rem(84);
+    font-size: px2rem(30);
+    line-height: px2rem(84);
+  }
+  .type-list-wrap {
+    display: flex;
+    li {
+      flex: 0 0 px2rem(58px);
+      i {
+        font-size: px2rem(30);
+      }
+    }
+  }
+}
+.goods-list-wrap {
+  padding-top: -px2rem(28);
+  .goods-list {
+    padding: 0 px2rem(28);
+  }
+}
+.btn-select-type {
+  margin-top: px2rem(10);
+  width: px2rem(140);
+  height: px2rem(60);
+  font-size: px2rem(25);
 }
 </style>
