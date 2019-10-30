@@ -33,7 +33,12 @@
       <mescroll-vue ref="mescroll" :up="mescrollUp" @init="mescrollInit">
         <ul class="goods-list">
           <li v-for="item in goods" :key="item.id">
-            <GoodsListItem :number-visible="true" :goods="item"></GoodsListItem>
+            <router-link :to="`/goodsselect/${item.id}`">
+              <GoodsListItem
+                :number-visible="true"
+                :goods="item"
+              ></GoodsListItem>
+            </router-link>
           </li>
         </ul>
       </mescroll-vue>

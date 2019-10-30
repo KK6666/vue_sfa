@@ -9,6 +9,7 @@ import VisitShop from './views/VisitShop.vue'
 import ShopInfo from './views/ShopInfo.vue'
 import Sign from './views/Sign.vue'
 import Order from './views/Order.vue'
+import GoodsSelect from './views/GoodsSelect.vue'
 import t from './views/t.vue'
 
 Vue.use(Router)
@@ -64,6 +65,11 @@ export default new Router({
       path: '/t',
       name: 't',
       component: t
+    },
+    {
+      path: '/goodsselect/:id',
+      name: 'GoodsSelect',
+      component: GoodsSelect
     }
   ]
 })

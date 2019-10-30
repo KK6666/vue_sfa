@@ -86,5 +86,9 @@ export default {
     return axios.get('/api/auth/goods', {
       params: data
     })
+  },
+  // 获取所有仓库信息
+  getWarehouse() {
+    return axios.get('/api/auth/warehouse')
   }
 }

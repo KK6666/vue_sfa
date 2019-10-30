@@ -15,7 +15,8 @@ export default new Vuex.Store({
     noticeList: [],
     shopList: [],
     goods: [],
-    curOrderShop: null
+    curOrderShop: null,
+    warehouseList: null
   },
   mutations: {
     saveUserData(state, userData) {
@@ -53,6 +54,9 @@ export default new Vuex.Store({
     // 将当前下订单门店信息存入store（在shopInfo组件完成）
     initCurOrderShop(state, shopInfo) {
       state.curOrderShop = shopInfo
+    },
+    initWarehouseList(state, data) {
+      state.warehouseList = data
     }
   },
   actions: {},

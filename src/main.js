@@ -10,7 +10,7 @@ import inobounce from 'inobounce'
 
 Vue.config.productionTip = false
 
-// 验证
+// 全局使用VeeValidate
 Vue.use(VeeValidate)
 // inobounce解决ios的上下拉回弹动画
 Vue.use(inobounce)
