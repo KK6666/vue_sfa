@@ -14,7 +14,7 @@
   -->
 
   <div class="count">
-    <div @click="countReduce">-</div>
+    <div class="reduce" @click="countReduce"><div>-</div></div>
     <!--  当value为个位数时，删除不会清空value,而是会变成0？
        因为this.$refs.input.value==''时，emit会传递0给父组件,因为双向绑定，本组件的input的value会显示0。这里给value加个判断，如果为0就显示'' -->
     <input
@@ -24,7 +24,7 @@
       @input="inputInput"
       @blur="inputBlur"
     />
-    <div @click="countAdd">+</div>
+    <div class="add" @click="countAdd"><div>+</div></div>
   </div>
 </template>
 
@@ -100,16 +100,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// .count {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   width: px2rem(220);
+//   text-align: center;
+//   div {
+//     border: 1px solid black;
+//     width: px2rem(47);
+//     height: px2rem(47);
+//     // padding: px2rem(28);
+//   }
+//   input {
+//     border: 1px solid black;
+//     width: px2rem(90);
+//     height: px2rem(47);
+//     text-align: center;
+//     border-radius: 5px;
+//   }
+// }
+
 .count {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: px2rem(220);
+  // width: px2rem(220);
   text-align: center;
-  div {
-    border: 1px solid black;
-    width: px2rem(47);
-    height: px2rem(47);
+  .add,
+  .reduce {
+    padding: px2rem(18);
+    div {
+      border: 1px solid black;
+      width: px2rem(47);
+      height: px2rem(47);
+    }
   }
   input {
     border: 1px solid black;

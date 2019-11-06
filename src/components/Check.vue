@@ -20,21 +20,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-div {
-  border: 1px solid #ccc;
-  border-radius: 50%;
-  width: px2rem(40);
-  height: px2rem(40);
-  box-sizing: border-box;
-}
-i {
-  display: block;
-  border-radius: 50%;
-  background: $bgc;
-  width: px2rem(40);
-  height: px2rem(40);
-  font-size: px2rem(30);
-  text-align: center;
-  color: white;
+.check {
+  padding: px2rem(28);
+  div {
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: px2rem(40);
+    height: px2rem(40);
+    box-sizing: border-box;
+  }
+  i {
+    display: block;
+    border-radius: 50%;
+    background: $bgc;
+    width: px2rem(40);
+    height: px2rem(40);
+    font-size: px2rem(30);
+    text-align: center;
+    color: white;
+  }
 }
 </style>

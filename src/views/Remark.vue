@@ -47,7 +47,6 @@ export default {
       warehouse => warehouse.warehouse.id == this.warehouseId
     )
     this.wName = warehouseItem.warehouse.reponame
-
     this.value = warehouseItem.remark
   },
   methods: {
@@ -71,6 +70,9 @@ export default {
         position: 'middle',
         duration: 1000
       })
+      setTimeout(() => {
+        this.$router.go(-1)
+      }, 1000)
     }
   }
 }

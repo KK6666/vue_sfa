@@ -34,16 +34,15 @@ export default {
   color: #fff;
   display: flex;
   justify-content: space-between;
-  .tp-l {
-    padding-left: px2rem(28);
-    min-width: px2rem(36);
-  }
+  .tp-l,
   .tp-r {
-    padding-right: px2rem(28);
-    min-width: px2rem(36);
-  }
-  .icon {
-    font-size: px2rem(36);
+    width: px2rem(100);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .icon {
+      font-size: px2rem(36);
+    }
   }
 }
 </style>

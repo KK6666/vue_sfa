@@ -15,7 +15,7 @@
               价格：<span>{{ getItemPriceTotal }}元</span>
             </div>
             <div class="count">
-              <div @click="handleCountAdd(-1)">-</div>
+              <div class="reduce" @click="handleCountAdd(-1)"><div>-</div></div>
               <!--  当value为个位数时，删除不会清空value,而是会变成0？
        因为this.$refs.input.value==''时，mutation会传递0给vuex,因为双向绑定，本组件的input的value会显示0。这里给value加个判断，如果为0就显示'' -->
               <!-- 注意这里正常写v-model，但这里绑定vuex的数据，仅有：value有效，改变goodsItem.count需要手动触发mutation，所以不写v-model也可以 -->
@@ -26,7 +26,7 @@
                 @input="inputInput"
                 @blur="inputBlur"
               />
-              <div @click="handleCountAdd(1)">+</div>
+              <div class="add" @click="handleCountAdd(1)"><div>+</div></div>
             </div>
           </li>
         </ul>
@@ -137,12 +137,11 @@ export default {
 <style lang="scss" scoped>
 .goods {
   height: px2rem(180);
-  padding: 0 px2rem(28);
+  // padding: 0 px2rem(28);
   display: flex;
   align-items: center;
   border-bottom: 1px solid #ccc;
   .left {
-    margin-right: px2rem(28);
   }
   .right {
     flex: 1;
@@ -165,14 +164,10 @@ export default {
       .goods-name {
         margin-bottom: px2rem(20);
       }
-      .g-w {
-        color: #ccc;
-        font-size: px2rem(26);
-        margin-bottom: px2rem(10);
-      }
       .p-c {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         .price {
           span {
             color: red;
@@ -182,12 +177,16 @@ export default {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          width: px2rem(220);
+          // width: px2rem(220);
           text-align: center;
-          div {
-            border: 1px solid black;
-            width: px2rem(47);
-            height: px2rem(47);
+          .add,
+          .reduce {
+            padding: px2rem(18);
+            div {
+              border: 1px solid black;
+              width: px2rem(47);
+              height: px2rem(47);
+            }
           }
           input {
             border: 1px solid black;

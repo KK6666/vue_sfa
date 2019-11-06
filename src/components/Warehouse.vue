@@ -68,14 +68,12 @@ export default {
 .warehouse {
   .header {
     height: px2rem(84);
-    padding: 0 px2rem(28);
     background-color: #fafafa;
     border-bottom: 1px solid #ccc;
     font-size: px2rem(28);
     display: flex;
     align-items: center;
     .left {
-      margin-right: px2rem(28);
     }
     .right {
       flex: 1;
@@ -83,6 +81,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       .remark {
+        padding: px2rem(28);
         color: #109d3d;
         display: flex;
         align-items: center;

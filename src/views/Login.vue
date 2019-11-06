@@ -242,7 +242,7 @@ export default {
     border-radius: px2rem(14);
     .logo-wrap {
       height: px2rem(150);
-      padding-top: px2rem(40);
+      padding-top: px2rem(50);
       .logo {
         width: px2rem(150);
         height: px2rem(150);
@@ -252,7 +252,7 @@ export default {
       }
     }
     .login-input-group {
-      margin-top: px2rem(40);
+      margin-top: px2rem(10);
       .login-input-field {
         width: px2rem(440);
         height: px2rem(90);
@@ -263,7 +263,7 @@ export default {
         color: #757575;
         border: 2px solid #e2e2e2;
         border-radius: px2rem(40);
-        margin-bottom: px2rem(30);
+        margin-top: px2rem(30);
         input {
           width: px2rem(250);
           padding-left: px2rem(25);
@@ -285,7 +285,7 @@ export default {
       color: red;
     }
     .login-option-wrap {
-      margin-top: px2rem(45);
+      // margin-top: px2rem(45);
       font-size: px2rem(24);
       color: #757575;
       span {
@@ -298,7 +298,7 @@ export default {
       }
       .remember-pwd {
         display: inline-block;
-        margin-left: px2rem(90);
+        padding: px2rem(40) 0 px2rem(40) px2rem(90);
       }
       .remember-pwd.active,
       .auto-login.active {
@@ -306,7 +306,7 @@ export default {
       }
       .auto-login {
         display: inline-block;
-        margin-left: px2rem(80);
+        padding: px2rem(40) 0 px2rem(40) px2rem(80);
       }
     }
   }
