@@ -21,35 +21,27 @@
         </li>
         <li>
           <div>数量</div>
-          <div class="count">
-            <div @click="countReduce">-</div>
-            <input
-              ref="input"
-              v-model.number="count"
-              type="text"
-              @input="inputInput"
-            />
-            <div @click="countAdd">+</div>
-          </div>
+          <Count v-model="count" :max="goodsInfo.number"></Count>
         </li>
       </ul>
     </div>
     <footer>
-      <div>取消</div>
-      <div>加入购物车</div>
+      <div @click="$router.go(-1)">取消</div>
+      <div @click="addToCart">加入购物车</div>
     </footer>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 import service from '../service'
 import GoodsListItem from '../components/GoodsListItem'
-import { mapState, mapMutations } from 'vuex'
-import { Toast } from 'mint-ui'
+import Count from '../components/Count'
 export default {
   name: 'GoodsList',
   components: {
-    GoodsListItem
+    GoodsListItem,
+    Count
   },
   data() {
     return {
@@ -66,17 +58,31 @@ export default {
     this.goodsId = this.$route.params.id
     // 获取当前货物信息
     this.goodsInfo = this.goods.find(item => item.id == this.goodsId)
-    console.log(this.goodsInfo)
+    // 将当前下订单货物信息存入vuex
+    this.initCurOrderGoods(this.goodsInfo)
     // 获取当前商品对应仓库的信息
     this.getWarehouse()
+    console.log()
   },
   methods: {
-    ...mapMutations(['initWarehouseList']),
+    ...mapMutations([
+      'initWarehouseList',
+      'initCurOrderGoods',
+      'initCurOrderWarehouse',
+      'addToCartList'
+    ]),
+    addToCart() {
+      console.log(this.count)
+      if (this.count <= 0) {
+        return
+      }
+      this.$router.push('/cart')
+      this.addToCartList({ count: this.count })
+    },
     getWarehouse() {
       service
         .getWarehouse()
         .then(res => {
-          console.log(res)
           // res为所有的仓库信息，后面都会用到，存进vuex
           if (!this.warehouseList) {
             this.initWarehouseList(res.data)
@@ -84,42 +90,13 @@ export default {
           this.warehouse = this.warehouseList.find(
             item => item.id == this.goodsInfo.warehouseId
           )
-          console.log(this.warehouse)
+          // 将当前下订单仓库信息存入vuex
+          this.initCurOrderWarehouse(this.warehouse)
         })
         .catch(e => {
           console.log('获取当前仓库信息失败 getWarehouse failed')
           console.log(e)
         })
-    },
-    countAdd() {
-      if (this.count >= this.goodsInfo.number) {
-        Toast({
-          message: '超过库存',
-          position: 'middle',
-          duration: 1000
-        })
-        return
-      }
-      this.count++
-    },
-    countReduce() {
-      if (this.count <= 1) return
-      this.count--
-    },
-    inputInput() {
-      if (this.count >= this.goodsInfo.number) {
-        Toast({
-          message: '超过库存',
-          position: 'middle',
-          duration: 1000
-        })
-        this.count = 1
-      }
-      // 控制input只能为正整数
-      this.$refs.input.value = this.$refs.input.value.replace(
-        /^(0+)|[^\d]+/g,
-        ''
-      )
     }
   }
 }
@@ -153,25 +130,6 @@ export default {
       .warehouse {
         display: flex;
         align-items: center;
-      }
-      .count {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: px2rem(220);
-        text-align: center;
-        div {
-          border: 1px solid black;
-          width: px2rem(47);
-          height: px2rem(47);
-        }
-        input {
-          border: 1px solid black;
-          width: px2rem(90);
-          height: px2rem(47);
-          text-align: center;
-          border-radius: 5px;
-        }
       }
     }
   }

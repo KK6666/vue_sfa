@@ -1,5 +1,5 @@
 <template>
-  <!-- Search组件 -->
+  <!-- Search组件说明 -->
   <!-- 如下可直接复制到父组件使用，注释需修改 -->
   <!-- 
     // v-model="q"等价于 :
@@ -56,6 +56,7 @@
     }
   }
   -->
+
   <div class="searchWrapper">
     <div class="wrapperL">
       <i class="iconfont">&#xe615;</i>

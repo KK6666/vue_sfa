@@ -13,6 +13,7 @@
     "canvas-resize": "^1.1.0",
     "core-js": "^2.6.5",
     "echarts": "^4.3.0",
+    "fastclick": "^1.0.6",
     "inobounce": "^0.2.0",
     "mescroll.js": "^1.4.1",
     "mint-ui": "^2.2.13",

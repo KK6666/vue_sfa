@@ -10,6 +10,8 @@ import ShopInfo from './views/ShopInfo.vue'
 import Sign from './views/Sign.vue'
 import Order from './views/Order.vue'
 import GoodsSelect from './views/GoodsSelect.vue'
+import Cart from './views/Cart.vue'
+import Remark from './views/Remark.vue'
 import t from './views/t.vue'
 
 Vue.use(Router)
@@ -70,6 +72,16 @@ export default new Router({
       path: '/goodsselect/:id',
       name: 'GoodsSelect',
       component: GoodsSelect
+    },
+    {
+      path: '/cart',
+      name: 'Cart',
+      component: Cart
+    },
+    {
+      path: '/cartremark/:shopId/:warehouseId',
+      name: 'Remark',
+      component: Remark
     }
   ]
 })

@@ -7,6 +7,7 @@ import './lib/hotcss/hotcss.js'
 import './lib/common.scss'
 import VeeValidate from 'vee-validate'
 import inobounce from 'inobounce'
+import fastclick from 'fastclick'
 
 Vue.config.productionTip = false
 
@@ -14,6 +15,8 @@ Vue.config.productionTip = false
 Vue.use(VeeValidate)
 // inobounce解决ios的上下拉回弹动画
 Vue.use(inobounce)
+fastclick.attach(document.body)
+
 // 全局注册TopHead组件
 Vue.component('TopHead', TopHead)
 
