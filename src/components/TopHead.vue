@@ -1,6 +1,9 @@
 <template>
   <div class="topHead">
-    <div class="tp-l" @click="$router.go(-1)">
+    <div
+      class="tp-l"
+      @click="routerData ? $router.push(routerData) : $router.go(-1)"
+    >
       <i class="icon iconfont icon-back"></i>
     </div>
     <div class="title">{{ title }}</div>
@@ -15,7 +18,8 @@ import '../assets/font/iconfont.css'
 export default {
   name: 'TopHead',
   props: {
-    title: { type: String, default: '' }
+    title: { type: String, default: '' },
+    routerData: { type: Object, default: null }
   },
   data() {
     return {}

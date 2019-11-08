@@ -82,10 +82,7 @@ export default new Vuex.Store({
       )
       goods.count += data.num
     },
-    // 清空购物车
-    clearCartList(state) {
-      state.cartList = []
-    },
+
     // 购物车添加数据
     addToCartList(state, data) {
       // cartList结构：
@@ -298,8 +295,8 @@ export default new Vuex.Store({
         shop.checked = false
       }
     },
-    //改变全选的checked
-    changeAllChecked(state, data) {
+    //全选点击
+    allCheckedClick(state, data) {
       let shop = state.cartList.find(item => item.shop.id == data.shopId)
       shop.checked = !shop.checked
       if (shop.checked) {
@@ -318,6 +315,11 @@ export default new Vuex.Store({
         })
       }
     },
+    // 全选单独变为false
+    allCheckedFalse(state, data) {
+      let shop = state.cartList.find(item => item.shop.id == data.shopId)
+      shop.checked = false
+    },
     // 设置仓库备注
     setRemark(state, data) {
       let shopItem = state.cartList.find(shop => shop.shop.id == data.shopId)
@@ -325,6 +327,22 @@ export default new Vuex.Store({
         warehouse => warehouse.warehouse.id == data.warehouseId
       )
       warehouseItem.remark = data.value
+    },
+    // 清空购物车
+    clearCartList(state) {
+      state.cartList = []
+    },
+    // 购物车清除已提交货物
+    clearSubmitted(state, data) {
+      let shopItem = state.cartList.find(shop => shop.shop.id == data.shopId)
+      shopItem.warehouseArray.forEach(warehouse => {
+        warehouse.goodsArray = warehouse.goodsArray.filter(
+          goods => goods.checked == false
+        )
+      })
+      shopItem.warehouseArray = shopItem.warehouseArray.filter(
+        warehouse => warehouse.goodsArray.length != 0
+      )
     }
   },
   actions: {},

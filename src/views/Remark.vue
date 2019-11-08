@@ -68,11 +68,11 @@ export default {
       Toast({
         message: '提交成功',
         position: 'middle',
-        duration: 1000
+        duration: 500
       })
       setTimeout(() => {
         this.$router.go(-1)
-      }, 1000)
+      }, 500)
     }
   }
 }

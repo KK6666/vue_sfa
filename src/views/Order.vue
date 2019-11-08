@@ -14,9 +14,9 @@
       <ul>
         <li :class="{ act: isOnSales }" @click="isOnSalesStatus">促销</li>
         <li :class="{ act: isAll }" @click="isAllStatus">全部</li>
-        <li>SKU-L</li>
-        <li>PSKU-N</li>
-        <li>PSKU</li>
+        <li>XXXXX</li>
+        <li>XXXXX</li>
+        <li>XXXXX</li>
       </ul>
     </div>
     <!--  商品列表区域 -->

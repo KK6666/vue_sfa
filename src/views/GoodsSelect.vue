@@ -72,11 +72,10 @@ export default {
       'addToCartList'
     ]),
     addToCart() {
-      console.log(this.count)
       if (this.count <= 0) {
         return
       }
-      this.$router.push('/cart')
+      this.$router.push(`/cart/${this.goodsId}`)
       this.addToCartList({ count: this.count })
     },
     getWarehouse() {
