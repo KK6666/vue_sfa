@@ -73,4 +73,11 @@
     font-size: px2rem(30) !important;
   }
 }
+
+.mint-cell {
+  height: px2rem(100);
+  .mint-cell-wrapper {
+    font-size: px2rem(30);
+  }
+}
 </style>

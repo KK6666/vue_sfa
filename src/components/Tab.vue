@@ -3,14 +3,20 @@
     <div
       class="left"
       :class="{ active: active_index === 1 ? true : false }"
-      @click="active_index = 1"
+      @click="
+        active_index = 1
+        $emit('leftClick')
+      "
     >
       <slot name="titleL"></slot>
     </div>
     <div
       class="right"
       :class="{ active: active_index === 2 ? true : false }"
-      @click="active_index = 2"
+      @click="
+        active_index = 2
+        $emit('rightClick')
+      "
     >
       <slot name="titleR"></slot>
     </div>

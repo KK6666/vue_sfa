@@ -136,6 +136,9 @@ export default {
       height: px2rem(47);
     }
   }
+  .add {
+    // padding-right: px2rem(18);
+  }
   input {
     border: 1px solid black;
     width: px2rem(90);

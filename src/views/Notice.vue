@@ -179,7 +179,7 @@ export default {
     padding: px2rem(50) 0 0 px2rem(40);
     border-bottom: px2rem(1) solid #ccc;
     .noticeTitle {
-      font-size: px2rem(34);
+      font-size: px2rem(30);
       color: #000;
       line-height: px2rem(28);
     }

@@ -21,7 +21,7 @@
         </li>
         <li>
           <div>数量</div>
-          <Count v-model="count" :max="goodsInfo.number"></Count>
+          <Count v-model="count" :max="goodsInfo.number" class="count"></Count>
         </li>
       </ul>
     </div>
@@ -62,8 +62,8 @@ export default {
     this.initCurOrderGoods(this.goodsInfo)
     // 获取当前商品对应仓库的信息
     this.getWarehouse()
-    console.log()
   },
+  mounted() {},
   methods: {
     ...mapMutations([
       'initWarehouseList',
@@ -130,6 +130,9 @@ export default {
         display: flex;
         align-items: center;
       }
+    }
+    .count {
+      margin-right: px2rem(-18);
     }
   }
 }

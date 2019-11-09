@@ -38,12 +38,22 @@ export default {
   color: #fff;
   display: flex;
   justify-content: space-between;
-  .tp-l,
+  .title {
+    flex: 1;
+    text-align: center;
+  }
   .tp-r {
-    width: px2rem(100);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: px2rem(200);
+    padding-right: px2rem(30);
+    text-align: right;
+    font-size: px2rem(28);
+    .icon {
+      font-size: px2rem(36);
+    }
+  }
+  .tp-l {
+    width: px2rem(200);
+    padding-left: px2rem(30);
     .icon {
       font-size: px2rem(36);
     }

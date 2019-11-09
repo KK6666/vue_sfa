@@ -18,6 +18,7 @@ export default {
   },
 
   // 腾讯地图获取设备地理坐标（使用promise封装）
+  /* eslint-disable */
   getLocation() {
     Indicator.open('定位中...')
     return new Promise((resolve, reject) => {
@@ -40,4 +41,5 @@ export default {
       )
     })
   }
+  /* eslint-disable */
 }

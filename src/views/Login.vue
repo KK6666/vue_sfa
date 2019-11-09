@@ -20,12 +20,17 @@
             <label for="comNum">公司编码:</label>
             <input
               id="comNum"
+              ref="comNum"
               v-model="company_num"
               v-validate="'required|length:4'"
               type="number"
               placeholder="请输入4位数字"
               name="comNum"
-              @focus="active_index = 1"
+              @focus="
+                active_index = 1
+                $refs.comNum.placeholder = ''
+              "
+              @blur="$refs.comNum.placeholder = '请输入4位数字'"
             />
             <!-- 显示验证未通过信息 -->
             <!-- <span>{{ errors.first('comNum') }}</span> -->
@@ -34,18 +39,23 @@
             class="login-input-field"
             :class="{
               active: active_index === 2,
-              error: errors.has('empNum')
+              error: errors.has('perNum')
             }"
           >
-            <label for="empNum">员工编号:</label>
+            <label for="perNum">员工编号:</label>
             <input
-              id="empNum"
+              id="perNum"
+              ref="perNum"
               v-model="person_num"
               v-validate="{ required: true, length: 4 }"
               type="number"
               placeholder="请输入4位数字"
-              name="empNum"
-              @focus="active_index = 2"
+              name="perNum"
+              @focus="
+                active_index = 2
+                $refs.perNum.placeholder = ''
+              "
+              @blur="$refs.perNum.placeholder = '请输入4位数字'"
             />
           </div>
           <div
@@ -55,12 +65,17 @@
             <label for="pwd">登录密码:</label>
             <input
               id="pwd"
+              ref="pwd"
               v-model="password"
               v-validate="'required|min:6'"
               type="password"
               placeholder="请输入6位及以上密码"
               name="pwd"
-              @focus="active_index = 3"
+              @focus="
+                active_index = 3
+                $refs.pwd.placeholder = ''
+              "
+              @blur="$refs.pwd.placeholder = '请输入6位及以上密码'"
             />
           </div>
         </div>
@@ -108,7 +123,7 @@ export default {
       autolog: false
     }
   },
-  mounted() {
+  created() {
     // localstorage里的数据赋值给data的属性
     let data = JSON.parse(localStorage.getItem('Login_data'))
     for (let i in data) {
@@ -117,6 +132,8 @@ export default {
     if (this.autolog === true) {
       this.handleLogBtnClick()
     }
+    if (this.$route.query.PNO) this.person_num = this.$route.query.PNO
+    if (this.$route.query.CNO) this.company_num = this.$route.query.CNO
   },
   methods: {
     ...mapMutations([
@@ -322,5 +339,26 @@ export default {
   font-size: px2rem(36);
   border-radius: px2rem(15);
   letter-spacing: px2rem(5);
+}
+
+// 改变placeHolder颜色
+input::-webkit-input-placeholder {
+  color: #ccc;
+  font-size: px2rem(25);
+}
+input::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #ccc;
+  font-size: px2rem(25);
+}
+input:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #ccc;
+  font-size: px2rem(25);
+}
+input:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #ccc;
+  font-size: px2rem(25);
 }
 </style>

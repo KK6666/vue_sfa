@@ -1,7 +1,7 @@
 <template>
   <div class="visitShop view">
     <TopHead title="进店拜访" class="header"></TopHead>
-    <Tab class="tab">
+    <Tab class="tab" @leftClick="actived = 1" @rightClick="actived = 2">
       <template v-slot:titleL
         >计划内
       </template>
@@ -9,40 +9,45 @@
         计划外
       </template>
     </Tab>
-    <Search
-      v-model="q"
-      class="search"
-      @handleSearch="handleSearch"
-      @inputClear="inputClear"
-    ></Search>
-    <div id="main" ref="main" class="main">
-      <mescroll-vue
-        ref="mescroll"
-        :up="mescrollUp"
-        class="mescroll"
-        @init="mescrollInit"
-      >
-        <ul class="listWrap">
-          <router-link
-            v-for="item in shopList"
-            :key="item.id"
-            :to="`/visitshop/${item.id}`"
-            class="listItem"
-          >
-            <ul>
-              <li class="top">
-                <span>{{ item.name }}</span>
-                <span>
-                  <i class="iconfont">&#xe61f;</i>&lt;{{ item.distance }}米
-                </span>
-              </li>
-              <li class="middle">{{ `id:${item.id}` }}</li>
-              <li class="bottom">{{ item.bossName }}</li>
-            </ul>
-            <i class="iconfont iR">&#xe84e;</i>
-          </router-link>
-        </ul>
-      </mescroll-vue>
+    <div v-show="actived == 1" class="wrap">
+      <Search
+        v-model="q"
+        class="search"
+        @handleSearch="handleSearch"
+        @inputClear="inputClear"
+      ></Search>
+      <div id="main" ref="main" class="main">
+        <mescroll-vue
+          ref="mescroll"
+          :up="mescrollUp"
+          class="mescroll"
+          @init="mescrollInit"
+        >
+          <ul class="listWrap">
+            <router-link
+              v-for="item in shopList"
+              :key="item.id"
+              :to="`/visitshop/${item.id}`"
+              class="listItem"
+            >
+              <ul>
+                <li class="top">
+                  <span>{{ item.name }}</span>
+                  <span>
+                    <i class="iconfont">&#xe61f;</i>&lt;{{ item.distance }}米
+                  </span>
+                </li>
+                <li class="middle">{{ `id:${item.id}` }}</li>
+                <li class="bottom">{{ item.bossName }}</li>
+              </ul>
+              <i class="iconfont iR">&#xe84e;</i>
+            </router-link>
+          </ul>
+        </mescroll-vue>
+      </div>
+    </div>
+    <div v-show="actived == 2" class="main right">
+      <div>暂无相关数据</div>
     </div>
   </div>
 </template>
@@ -54,7 +59,7 @@ import service from '../service'
 import { Indicator, Toast } from 'mint-ui'
 import MescrollVue from 'mescroll.js/mescroll.vue'
 import { mapState, mapMutations } from 'vuex'
-// import Utility from '../common/Utility'
+import Utility from '../common/Utility'
 export default {
   name: 'VisitShop',
   components: {
@@ -94,7 +99,8 @@ export default {
           tip: '暂无相关数据' //提示
         }
       },
-      hasNext: true
+      hasNext: true,
+      actived: 1
     }
   },
   computed: {
@@ -104,16 +110,15 @@ export default {
   },
   created() {},
   mounted() {
-    this.getData()
     // 定位成功后请求shop数据（getLocation已用promise封装）
-    // Utility.getLocation()
-    //   .then(pos => {
-    //     this.pos = pos
-    //     this.getData()
-    //   })
-    //   .catch(e => {
-    //     console.log(e)
-    //   })
+    Utility.getLocation()
+      .then(pos => {
+        this.pos = pos
+        this.getData()
+      })
+      .catch(e => {
+        console.log(e)
+      })
     // 设置mescroll定位的top值 ,下拉刷新关闭
     this.setMescroll()
   },
@@ -129,10 +134,10 @@ export default {
     },
     getData() {
       // pos不存在（即未定位），不可以search
-      // if (!this.pos) {
-      //   Toast('请先刷新页面重新点位')
-      //   return
-      // }
+      if (!this.pos) {
+        Toast('请先刷新页面重新点位')
+        return
+      }
       // 搜索前，将数据清空，并且将mescroll的页码归0
       this.emptyShopList()
       this.mescrollUp.page.num = 0
@@ -153,8 +158,8 @@ export default {
       console.log('upCallback')
       Indicator.open('请求数据中...')
       service
-        // .getShops(this.pos.Lng, this.pos.Lat, this.q, page.num)
-        .getShops(1, 1, this.q, page.num)
+        .getShops(this.pos.Lng, this.pos.Lat, this.q, page.num)
+        // .getShops(1, 1, this.q, page.num)
         .then(res => {
           console.log(res)
           Indicator.close()
@@ -274,5 +279,11 @@ export default {
       text-align: right;
     }
   }
+}
+
+.right {
+  text-align: center;
+  padding-top: px2rem(40);
+  color: gray;
 }
 </style>

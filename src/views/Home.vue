@@ -1,6 +1,6 @@
 <template>
   <div class="home view">
-    <TopHead title="SFA">
+    <TopHead title="SFA" :router-data="routerData">
       <router-link
         slot="r"
         class="icon iconfont icon-user"
@@ -95,7 +95,8 @@ export default {
     return {
       monthPercent: 0,
       totalShops: 0,
-      topicList: topicList
+      topicList: topicList,
+      routerData: { path: '/' }
     }
   },
   computed: {

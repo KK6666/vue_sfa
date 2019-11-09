@@ -25,6 +25,9 @@ export default new Vuex.Store({
     saveUserData(state, userData) {
       state.LoginUser = userData
     },
+    cleartUserData(state) {
+      state.LoginUser = null
+    },
     // noticeList数组push数据
     noticeListPush(state, data) {
       state.noticeList.push(...data)
@@ -66,7 +69,6 @@ export default new Vuex.Store({
     initCurOrderGoods(state, data) {
       state.curOrderGoods = data
     },
-
     // 将所有仓库信息存入vuex
     initWarehouseList(state, data) {
       state.warehouseList = data

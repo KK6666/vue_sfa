@@ -13,6 +13,8 @@ import GoodsSelect from './views/GoodsSelect.vue'
 import Cart from './views/Cart.vue'
 import Remark from './views/Remark.vue'
 import CartSubmit from './views/CartSubmit.vue'
+import Future from './views/Future.vue'
+import AddShop from './views/AddShop.vue'
 import t from './views/t.vue'
 
 Vue.use(Router)
@@ -88,6 +90,36 @@ export default new Router({
       path: '/cartsubmit',
       name: 'CartSubmit',
       component: CartSubmit
+    },
+    {
+      path: '/future',
+      name: 'Future',
+      component: Future
+    },
+    {
+      path: '/phoneorder',
+      redirect: '/future'
+    },
+    {
+      path: '/orders',
+      redirect: '/future'
+    },
+    {
+      path: '/training',
+      redirect: '/future'
+    },
+    {
+      path: '/message',
+      redirect: '/future'
+    },
+    {
+      path: '/addedshop',
+      name: 'AddShop',
+      component: AddShop
+    },
+    {
+      path: '/asyncdata',
+      redirect: '/future'
     }
   ]
 })
