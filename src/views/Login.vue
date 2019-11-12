@@ -132,6 +132,7 @@ export default {
     if (this.autolog === true) {
       this.handleLogBtnClick()
     }
+    // 注销登录返回登录页面时，路由里有用户信息，显示出来
     if (this.$route.query.PNO) this.person_num = this.$route.query.PNO
     if (this.$route.query.CNO) this.company_num = this.$route.query.CNO
   },

@@ -1,7 +1,9 @@
 <template>
   <div class="order view">
     <TopHead title="下单" class="header">
-      <div slot="r"><i class="icon iconfont icon-cart"></i></div>
+      <div slot="r" @click="toCart">
+        <i class="icon iconfont icon-cart"></i>
+      </div>
     </TopHead>
     <Search
       v-model="q"
@@ -121,9 +123,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      goods: 'goods'
-    }),
+    ...mapState(['goods', 'curOrderShop', 'cartList']),
     getFilterGoodsType() {
       return this.filterGoodsType.join('/')
     }
@@ -227,6 +227,21 @@ export default {
       this.$refs.mescroll.$el.style.top = this.$refs.main.offsetTop + 'px'
       // mescroll 下拉刷新关闭
       this.mescroll.lockDownScroll(true)
+    },
+    toCart() {
+      // 暂时使用
+      let shop = this.cartList.find(
+        item => this.curOrderShop.id == item.shop.id
+      )
+      if (!shop || shop.warehouseArray.length === 0) {
+        Toast({
+          message: '该门店购物车是空的呦~',
+          position: 'middle',
+          duration: 1000
+        })
+        return
+      }
+      this.$router.push('/cart/00')
     }
   },
   beforeRouteEnter(to, from, next) {

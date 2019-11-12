@@ -55,6 +55,9 @@ export default {
     ...mapState(['goods', 'warehouseList'])
   },
   created() {
+    // order页面的购物车icon图标，辅助实现跳转，暂时使用！！
+    if (!this.$route.params.id) return
+
     this.goodsId = this.$route.params.id
     // 获取当前货物信息
     this.goodsInfo = this.goods.find(item => item.id == this.goodsId)

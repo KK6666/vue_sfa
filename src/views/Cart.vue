@@ -65,7 +65,6 @@ export default {
     }
   },
   created() {
-    console.log(this.$route)
     // 获取当前门店所有信息
     this.shopItem = this.getShop()
     // 检查门店下是否呦未选中的仓库，有则说明没有全选，或者检测改shop下是还有商品，单独将全选取消

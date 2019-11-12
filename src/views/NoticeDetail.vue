@@ -30,7 +30,6 @@ export default {
   mounted() {
     const noticeId = this.$route.params.id
     this.notice = this.noticeList.find(item => noticeId == item.id)
-    console.log(this.notice)
 
     // 服务器设置已读
     service.setNoticeReaded(noticeId)

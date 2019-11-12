@@ -42,6 +42,7 @@ export default {
     }
   },
   created() {
+    // 获取vuex里的仓库名称和已存在的备注信息
     let shopItem = this.cartList.find(shop => shop.shop.id == this.shopId)
     let warehouseItem = shopItem.warehouseArray.find(
       warehouse => warehouse.warehouse.id == this.warehouseId

@@ -15,7 +15,6 @@ import Remark from './views/Remark.vue'
 import CartSubmit from './views/CartSubmit.vue'
 import Future from './views/Future.vue'
 import AddShop from './views/AddShop.vue'
-import t from './views/t.vue'
 
 Vue.use(Router)
 
@@ -65,11 +64,6 @@ export default new Router({
       path: '/order/:id',
       name: 'Order',
       component: Order
-    },
-    {
-      path: '/t',
-      name: 't',
-      component: t
     },
     {
       path: '/goodsselect/:id',

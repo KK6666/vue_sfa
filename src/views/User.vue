@@ -36,9 +36,7 @@ export default {
   computed: {
     ...mapState(['LoginUser'])
   },
-  created() {
-    console.log(this.LoginUser)
-  },
+  created() {},
   methods: {
     ...mapMutations(['cleartUserData']),
     logoutClick() {

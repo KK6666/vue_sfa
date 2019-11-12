@@ -60,20 +60,23 @@ export default {
     if (this.noticeList.length) {
       return
     }
-    // 最早一条公告时间设为为当前时间，并以当前时间为第一条时间加载
-    service.getNotice(new Date(), 15, true).then(res => {
-      this.noticeListPush(res.data.data.messages.reverse())
-      // earlistDate等于公告列表里最早一条的时间，作为下拉加载之前数据的earlistDate
-      this.earlistDate = new Date(
-        this.noticeList[this.noticeList.length - 1].SubDate
-      )
-      // latestDatee等于公告列表里最晚一条的时间，作为下拉加载之前数据的earlistDate
-      this.latestDate = new Date(this.noticeList[0].SubDate)
-    })
+    this.getNotice()
   },
   methods: {
     ...mapMutations(['noticeListPush', 'noticeListUnshift']),
     // 下拉刷新（如果有新数据，需要添加到数据列表noticeList的最前面）
+    getNotice() {
+      // 最早一条公告时间设为为当前时间，并以当前时间为第一条时间加载
+      service.getNotice(new Date(), 15, true).then(res => {
+        this.noticeListPush(res.data.data.messages.reverse())
+        // earlistDate等于公告列表里最早一条的时间，作为下拉加载之前数据的earlistDate
+        this.earlistDate = new Date(
+          this.noticeList[this.noticeList.length - 1].SubDate
+        )
+        // latestDatee等于公告列表里最晚一条的时间，作为下拉加载之前数据的earlistDate
+        this.latestDate = new Date(this.noticeList[0].SubDate)
+      })
+    },
     loadTop() {
       service.getNotice(this.latestDate, 15, false).then(res => {
         this.noticeListUnshift(res.data.data.messages.reverse())
