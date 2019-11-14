@@ -26,7 +26,15 @@ export default new Vuex.Store({
       state.LoginUser = userData
     },
     cleartUserData(state) {
-      state.LoginUser = null
+      state.LoginUser = userData
+      state.noticeList = []
+      state.shopList = []
+      state.goods = []
+      state.curOrderShop = null
+      state.curOrderWarehouse = null
+      state.curOrderGoods = null
+      state.warehouseList = null
+      state.cartList = []
     },
     // noticeList数组push数据
     noticeListPush(state, data) {

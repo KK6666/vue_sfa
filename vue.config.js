@@ -29,7 +29,7 @@ module.exports = {
     hot: true,
     clientLogLevel: 'warning'
   },
-  // 通过外联cdn加载依赖，build时不会打入包中，减小包大小
+  // 通过外联cdn加载依赖， build时不会打入包中， 减小包大小
   configureWebpack: config => {
     config.externals = {
       vue: 'Vue',

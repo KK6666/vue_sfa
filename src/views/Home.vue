@@ -96,7 +96,7 @@ export default {
       monthPercent: 0,
       totalShops: 0,
       topicList: topicList,
-      routerData: { path: '/' }
+      routerData: { path: '/', query: { stopAutoLog: 1 } }
     }
   },
   computed: {

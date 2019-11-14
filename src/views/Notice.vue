@@ -12,11 +12,7 @@
           @init="mescrollInit"
         >
           <ul class="noticeList">
-            <li
-              v-for="(item, index) in noticeList"
-              :key="index"
-              class="noticeItem"
-            >
+            <li v-for="item in noticeList" :key="item.id" class="noticeItem">
               <router-link :to="`/notice/${item.id}`">
                 <div class="noticeWrap">
                   <i
@@ -80,7 +76,15 @@ export default {
     })
   },
   created() {},
+  activated() {
+    console.log('activated')
+    // 注销登录后，不关闭页面，再次登录后打开此页面会出现不加载数据情况，应为keepAlive的问题，手动触发一次加载数据
+    if (this.noticeList.length === 0) {
+      this.mescroll.triggerUpScroll()
+    }
+  },
   beforeRouteEnter(to, from, next) {
+    console.log('beforeRouteEnter')
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写
     next(vm => {
       // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteEnter方法
@@ -88,6 +92,7 @@ export default {
     })
   },
   beforeRouteLeave(to, from, next) {
+    console.log('beforeRouteLeave')
     // 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写
     // 找到当前mescroll的ref,调用子组件mescroll-vue的beforeRouteLeave方法
     this.$refs.mescroll && this.$refs.mescroll.beforeRouteLeave() // 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置

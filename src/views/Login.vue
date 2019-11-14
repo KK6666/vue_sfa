@@ -129,7 +129,8 @@ export default {
     for (let i in data) {
       this[i] = data[i]
     }
-    if (this.autolog === true) {
+    // 当从home页面返回时，如果已经选择了自动登录，会无法返回回来，通过stopAutoLog组织自动跳转
+    if (this.autolog === true && !this.$route.query.stopAutoLog) {
       this.handleLogBtnClick()
     }
     // 注销登录返回登录页面时，路由里有用户信息，显示出来

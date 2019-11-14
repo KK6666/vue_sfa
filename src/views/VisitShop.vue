@@ -122,6 +122,22 @@ export default {
     // 设置mescroll定位的top值 ,下拉刷新关闭
     this.setMescroll()
   },
+  activated() {
+    // 注销登录后，不关闭页面，再次登录后打开此页面会出现不加载数据情况，应为keepAlive的问题，手动触发一次加载数据
+    if (this.shopList.length === 0) {
+      // 定位成功后请求shop数据（getLocation已用promise封装）
+      Utility.getLocation()
+        .then(pos => {
+          this.pos = pos
+          this.getData()
+        })
+        .catch(e => {
+          console.log(e)
+        })
+      // 设置mescroll定位的top值 ,下拉刷新关闭
+      this.setMescroll()
+    }
+  },
   methods: {
     ...mapMutations(['shopListPush', 'emptyShopList']),
     // 当搜索栏请空时，发起一次新的请求，避免页面无有用数据，增强用户体验
